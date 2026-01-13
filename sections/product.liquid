@@ -1,13 +1,286 @@
-<div class="w-full px-8">
-  <h1 class="text-2xl font-bold text-center">{{ product.title }}</h1>
+<div class="max-w-[1440px] mx-auto px-4 md:px-8 py-8 md:py-12">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+    <!-- Left Column: Product Gallery -->
+    <div class="product-gallery flex flex-col gap-4">
+      <!-- Main Image Stage -->
+      <div class="relative w-full aspect-square bg-[#F9F3F1] rounded-2xl overflow-hidden group">
+        {% if product.selected_or_first_available_variant.featured_media != null %}
+          {% assign featured_media = product.selected_or_first_available_variant.featured_media %}
+        {% else %}
+          {% assign featured_media = product.featured_media %}
+        {% endif %}
+
+        <img
+          id="MainImage"
+          src="{{ featured_media | image_url: width: 800 }}"
+          alt="{{ featured_media.alt | escape }}"
+          class="w-full h-full object-contain p-8 transition-opacity duration-300 ease-in-out"
+          width="800"
+          height="800"
+        >
+
+        <!-- Slider Navigation -->
+        {% if product.media.size > 1 %}
+          <button
+            class="absolute top-1/2 left-4 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 hover:bg-gray-50 focus:outline-none z-10"
+            onclick="moveGallery(-1)"
+            aria-label="Previous image"
+          >
+            {% render 'icon-chevron-left', class_name: 'w-6 h-6' %}
+          </button>
+          <button
+            class="absolute top-1/2 right-4 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 hover:bg-gray-50 focus:outline-none z-10"
+            onclick="moveGallery(1)"
+            aria-label="Next image"
+          >
+            {% render 'icon-chevron-right', class_name: 'w-6 h-6' %}
+          </button>
+        {% endif %}
+      </div>
+
+      <!-- Thumbnails -->
+      {% if product.media.size > 1 %}
+        <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
+          {% for media in product.media %}
+            <button
+              class="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 bg-[#F9F3F1] rounded-lg overflow-hidden border-2 {% if media.id == featured_media.id %}border-[#025A60]{% else %}border-transparent{% endif %} hover:border-[#025A60] transition-all"
+              onclick="updateMainImage('{{ media | image_url: width: 800 }}', this)"
+            >
+              <img
+                src="{{ media | image_url: width: 200 }}"
+                alt="{{ media.alt | escape }}"
+                class="w-full h-full object-contain p-2"
+                width="100"
+                height="100"
+              >
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Product Info -->
+    <div class="product-info flex flex-col gap-6">
+      <!-- Badges / Header -->
+      <div class="flex items-center justify-between">
+        <span class="bg-[#D94378] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          {{ product.metafields.custom.badge | default: "India's #1 Advanced Dog Food" }}
+        </span>
+
+        <div class="flex items-center gap-1 text-[#F5A623]">
+          {% for i in (1..5) %}
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+          {% endfor %}
+          <span class="text-gray-600 text-sm font-medium ml-1">4.4 (1,900+ Reviews)</span>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <h1 class="text-4xl md:text-5xl font-extrabold text-[#333] font-['Cabin']">
+        {{ product.title }}
+      </h1>
+
+      <!-- Price -->
+      <div class="flex items-baseline gap-3">
+        <span class="text-2xl font-bold text-[#333]" id="ProductPrice">
+          {{ product.selected_or_first_available_variant.price | money }}
+        </span>
+        {% if product.selected_or_first_available_variant.compare_at_price
+            > product.selected_or_first_available_variant.price
+        %}
+          <span class="text-lg text-gray-500 line-through">
+            {{ product.selected_or_first_available_variant.compare_at_price | money }}
+          </span>
+        {% endif %}
+        <span class="text-xs text-gray-500">MRP Inclusive of all taxes</span>
+      </div>
+
+      <!-- Highlights Box -->
+      <div class="bg-[#FDF2F4] border border-[#F8D7DA] rounded-lg p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-[#D94378] rounded-full flex items-center justify-center flex-shrink-0 text-white">
+          <!-- Heart/Health Icon Placeholder -->
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-800 text-sm md:text-base">30% Digestive Health Improvement</h3>
+          <p class="text-xs text-gray-600">
+            Results may vary based on pet size, diet, and <a href="#" class="underline">See Reports</a>
+          </p>
+        </div>
+      </div>
+
+      {% form 'product', product, id: 'product-form', class: 'flex flex-col gap-6' %}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          id="SelectedVariantId"
+        >
+
+        <!-- Variant Picker: Size -->
+        {% unless product.has_only_default_variant %}
+          <div class="flex flex-col gap-3">
+            <span class="text-sm font-bold uppercase tracking-wide text-gray-500">Select Size</span>
+            <div class="flex flex-wrap gap-3">
+              {% for variant in product.variants %}
+                <button
+                  type="button"
+                  class="variant-btn relative px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-medium text-sm hover:border-[#025A60] hover:bg-[#F0FDF4] transition-all {% if product.selected_or_first_available_variant.id == variant.id %}ring-2 ring-[#025A60] bg-[#F0FDF4] border-[#025A60]{% endif %}"
+                  data-variant-id="{{ variant.id }}"
+                  data-price="{{ variant.price | money }}"
+                  data-compare-at-price="{{ variant.compare_at_price | money }}"
+                  onclick="selectVariant(this)"
+                >
+                  {{ variant.title }}
+                  {% if variant.title contains '1kg' %}
+                    <span class="absolute -top-3 -right-2 bg-[#025A60] text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm"
+                      >25% Off</span
+                    >
+                  {% elsif variant.title contains '500g' %}
+                    <span class="absolute -top-3 -right-2 bg-[#D94378] text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm"
+                      >Hot</span
+                    >
+                  {% endif %}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endunless %}
+
+        <!-- Quantity & Add to Cart -->
+        <div class="flex flex-col md:flex-row gap-4 items-stretch">
+          <!-- Quantity -->
+          <div class="flex items-center justify-between border border-gray-300 rounded-lg px-2 w-[120px] h-[50px]">
+            <button type="button" class="p-2 text-gray-500 hover:text-black" onclick="updateQty(-1)">
+              {% render 'icon-minus', class_name: 'w-4 h-4' %}
+            </button>
+            <input
+              type="number"
+              name="quantity"
+              id="Quantity"
+              value="1"
+              min="1"
+              class="w-10 text-center border-none focus:outline-none font-bold text-gray-800"
+              readonly
+            >
+            <button type="button" class="p-2 text-gray-500 hover:text-black" onclick="updateQty(1)">
+              {% render 'icon-plus', class_name: 'w-4 h-4' %}
+            </button>
+          </div>
+
+          <!-- Add to Cart Button -->
+          <button
+            type="submit"
+            name="add"
+            class="flex-1 bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-lg hover:shadow-xl hover:bg-[#024a4f] transition-all flex items-center justify-center gap-2"
+          >
+            {% render 'icon-cart', class_name: 'w-5 h-5 fill-current' %}
+            ADD TO CART
+          </button>
+        </div>
+
+        <!-- Buy It Now -->
+        <button
+          type="button"
+          class="w-full bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-lg hover:bg-[#024a4f] transition-all"
+        >
+          BUY IT NOW
+        </button>
+      {% endform %}
+
+      <!-- Trust Badges / Offers -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div class="bg-[#F0FDF4] border border-dashed border-[#025A60] rounded-lg p-3 flex items-start gap-3">
+          <div class="p-1 bg-white rounded-full border border-[#025A60]">
+            <svg class="w-4 h-4 text-[#025A60]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-[#025A60] font-bold text-sm">Get it for ₹3,190</p>
+            <p class="text-xs text-gray-500">Copy code to get 10% off</p>
+          </div>
+        </div>
+        <div class="bg-[#F0FDF4] border border-dashed border-[#025A60] rounded-lg p-3 flex items-start gap-3">
+          <div class="p-1 bg-white rounded-full border border-[#025A60]">
+            <svg class="w-4 h-4 text-[#025A60]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-[#025A60] font-bold text-sm">Get it for ₹3,190</p>
+            <p class="text-xs text-gray-500">Copy code to get 10% off</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+  function moveGallery(direction) {
+    // Basic logic to swap images - for MVP we just rely on updating Main Image source
+    // In a real slider, this would scroll the container or change index
+    const thumbnails = document.querySelectorAll('.product-gallery button img');
+    if (thumbnails.length > 0) {
+      // logic to implement cyclic slider
+    }
+  }
+
+  function updateMainImage(src, thumbnail) {
+    document.getElementById('MainImage').src = src;
+    // Update active border state
+    document.querySelectorAll('.product-gallery button').forEach((btn) => {
+      btn.classList.remove('border-[#025A60]');
+      btn.classList.add('border-transparent');
+    });
+    thumbnail.classList.remove('border-transparent');
+    thumbnail.classList.add('border-[#025A60]');
+  }
+
+  function updateQty(change) {
+    const input = document.getElementById('Quantity');
+    let val = parseInt(input.value);
+    val += change;
+    if (val < 1) val = 1;
+    input.value = val;
+  }
+
+  function selectVariant(btn) {
+    const variantId = btn.dataset.variantId;
+    const price = btn.dataset.price;
+    const comparePrice = btn.dataset.compareAtPrice;
+
+    // Update Hidden Input
+    document.getElementById('SelectedVariantId').value = variantId;
+
+    // Update UI Price
+    document.getElementById('ProductPrice').textContent = price;
+
+    // Update Toggle State
+    document.querySelectorAll('.variant-btn').forEach((b) => {
+      b.classList.remove('ring-2', 'ring-[#025A60]', 'bg-[#F0FDF4]', 'border-[#025A60]');
+      b.classList.add('bg-gray-50', 'border-gray-200');
+    });
+    btn.classList.remove('bg-gray-50', 'border-gray-200');
+    btn.classList.add('ring-2', 'ring-[#025A60]', 'bg-[#F0FDF4]', 'border-[#025A60]');
+  }
+</script>
 
 {% schema %}
 {
-  "name": "t:general.product",
+  "name": "Product Information",
+  "tag": "section",
   "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Product Information"
+    }
+  ]
 }
 {% endschema %}
