@@ -124,27 +124,51 @@
         <!-- Variant Picker: Size -->
         {% unless product.has_only_default_variant %}
           <div class="flex flex-col gap-3">
-            <span class="text-sm font-bold uppercase tracking-wide text-gray-500">Select Size</span>
-            <div class="flex flex-wrap gap-3">
+            <span class="text-sm font-bold uppercase tracking-wide text-gray-500 underline decoration-solid underline-offset-4"
+              >Select Size</span
+            >
+            <div class="flex flex-wrap gap-x-4 gap-y-6 pt-2">
               {% for variant in product.variants %}
+                {% assign is_selected = false %}
+                {% if product.selected_or_first_available_variant.id == variant.id %}
+                  {% assign is_selected = true %}
+                {% endif %}
+
                 <button
                   type="button"
-                  class="variant-btn relative px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-medium text-sm hover:border-[#025A60] hover:bg-[#F0FDF4] transition-all {% if product.selected_or_first_available_variant.id == variant.id %}ring-2 ring-[#025A60] bg-[#F0FDF4] border-[#025A60]{% endif %}"
+                  class="
+                    variant-btn relative px-6 py-3 rounded-full text-sm font-bold transition-all border
+                    {% if is_selected %}
+                      bg-[#E0F2F1] text-[#004D40] border-transparent ring-1 ring-[#004D40]
+                    {% else %}
+                      bg-[#EEE] text-gray-700 border-transparent hover:bg-gray-200
+                    {% endif %}
+                  "
                   data-variant-id="{{ variant.id }}"
                   data-price="{{ variant.price | money }}"
                   data-compare-at-price="{{ variant.compare_at_price | money }}"
                   onclick="selectVariant(this)"
+                  style="min-width: 120px;"
                 >
-                  {{ variant.title }}
-                  {% if variant.title contains '1kg' %}
-                    <span class="absolute -top-3 -right-2 bg-[#025A60] text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm"
-                      >25% Off</span
+                  <!-- Badges logic based on variant title text matching the screenshot intent -->
+                  <!-- Example logic: 500g -> Most Ordered, 1kg -> Best Deal -->
+                  {% if variant.title contains '500g' %}
+                    <div
+                      class="absolute -top-3 left-0 bg-[#F06292] text-white text-[10px] uppercase font-bold px-2 py-0.5"
+                      style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 10% 50%); border-radius: 2px 0 0 2px; left: 10px;"
                     >
-                  {% elsif variant.title contains '500g' %}
-                    <span class="absolute -top-3 -right-2 bg-[#D94378] text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm"
-                      >Hot</span
+                      Most Ordered
+                    </div>
+                  {% elsif variant.title contains '1kg' %}
+                    <div
+                      class="absolute -top-3 left-0 bg-[#D81B60] text-white text-[10px] uppercase font-bold px-2 py-0.5"
+                      style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 10% 50%); border-radius: 2px 0 0 2px; left: 10px;"
                     >
+                      Best Deal
+                    </div>
                   {% endif %}
+
+                  {{ variant.title }}
                 </button>
               {% endfor %}
             </div>
@@ -152,10 +176,14 @@
         {% endunless %}
 
         <!-- Quantity & Add to Cart -->
-        <div class="flex flex-col md:flex-row gap-4 items-stretch">
+        <div class="flex items-center gap-4 mt-2">
           <!-- Quantity -->
-          <div class="flex items-center justify-between border border-gray-300 rounded-lg px-2 w-[120px] h-[50px]">
-            <button type="button" class="p-2 text-gray-500 hover:text-black" onclick="updateQty(-1)">
+          <div class="flex items-center justify-between border border-[#025A60] rounded-lg w-[140px] h-[50px] bg-[#F5F5F5] overflow-hidden">
+            <button
+              type="button"
+              class="w-12 h-full flex items-center justify-center text-gray-700 hover:bg-gray-200"
+              onclick="updateQty(-1)"
+            >
               {% render 'icon-minus', class_name: 'w-4 h-4' %}
             </button>
             <input
@@ -164,10 +192,14 @@
               id="Quantity"
               value="1"
               min="1"
-              class="w-10 text-center border-none focus:outline-none font-bold text-gray-800"
+              class="w-full h-full text-center bg-transparent border-none focus:outline-none font-bold text-lg text-[#025A60]"
               readonly
             >
-            <button type="button" class="p-2 text-gray-500 hover:text-black" onclick="updateQty(1)">
+            <button
+              type="button"
+              class="w-12 h-full flex items-center justify-center text-gray-700 hover:bg-gray-200"
+              onclick="updateQty(1)"
+            >
               {% render 'icon-plus', class_name: 'w-4 h-4' %}
             </button>
           </div>
@@ -176,19 +208,19 @@
           <button
             type="submit"
             name="add"
-            class="flex-1 bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-lg hover:shadow-xl hover:bg-[#024a4f] transition-all flex items-center justify-center gap-2"
+            class="flex-1 bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-md hover:bg-[#024a4f] transition-all flex items-center justify-center gap-2 uppercase tracking-wide"
           >
-            {% render 'icon-cart', class_name: 'w-5 h-5 fill-current' %}
-            ADD TO CART
+            {% render 'icon-cart', class_name: 'w-5 h-5 fill-white' %}
+            Add to Cart
           </button>
         </div>
 
         <!-- Buy It Now -->
         <button
           type="button"
-          class="w-full bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-lg hover:bg-[#024a4f] transition-all"
+          class="w-full bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-md hover:bg-[#024a4f] transition-all uppercase tracking-wide"
         >
-          BUY IT NOW
+          Buy It Now
         </button>
       {% endform %}
 
