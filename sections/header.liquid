@@ -1,6 +1,32 @@
-<header class="relative flex items-center justify-between p-4 md:p-8">
-  <nav class="hidden md:block" aria-label="Main navigation">
-    <ul class="flex items-center gap-8 list-none">
+<header class="relative flex items-center justify-between px-4 md:px-8 w-full max-w-[1440px] h-[75px] opacity-100 mx-auto z-40 bg-white">
+  <!-- Part 1: Logo & Mobile Menu Toggle -->
+  <div class="flex flex-1 items-center justify-start gap-4">
+    <button
+      type="button"
+      class="block md:hidden bg-transparent border-none cursor-pointer p-2"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      data-menu-toggle
+    >
+      {% render 'icon-hamburger' %}
+    </button>
+
+    <a href="{{ routes.root_url }}" class="block" aria-label="Willie">
+      {% if settings.logo != blank %}
+        {{
+          settings.logo
+          | image_url: width: 600
+          | image_tag: class: 'w-[135px] h-auto object-contain opacity-100', loading: 'eager', alt: shop.name
+        }}
+      {% else %}
+        <span class="text-2xl font-bold">Willie</span>
+      {% endif %}
+    </a>
+  </div>
+
+  <!-- Part 2: Navigation (Desktop) -->
+  <nav class="hidden md:flex flex-1 justify-center" aria-label="Main navigation">
+    <ul class="flex items-center gap-[40px] opacity-100 list-none">
       {% for link in section.settings.menu.links %}
         <li class="relative">
           <div class="group">
@@ -16,6 +42,7 @@
                 {{ link.title }}
               </a>
             {% endif %}
+
             {% if link.links.size > 0 %}
               <ul class="absolute top-full left-0 min-w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2 mt-2 list-none">
                 {% for child_link in link.links %}
@@ -36,28 +63,18 @@
     </ul>
   </nav>
 
-  <button
-    type="button"
-    class="block md:hidden bg-transparent border-none cursor-pointer p-2"
-    aria-label="Toggle menu"
-    aria-expanded="false"
-    data-menu-toggle
-  >
-    {% render 'icon-hamburger' %}
-  </button>
-
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-    <a href="{{ routes.root_url }}" class="block" aria-label=" Willie ">
-      {% if settings.logo != blank %}
-        {% render 'logo', class_name: 'w-auto h-10' %}
-
-      {% else %}
-        <span class="text-2xl font-bold"> Willie </span>
-      {% endif %}
+  <!-- Part 3: Icons (Search, Account, Cart) -->
+  <div class="flex flex-1 items-center justify-end gap-4">
+    <a href="{{ routes.search_url }}" class="p-2 text-inherit" aria-label="Search">
+      {% render 'icon-search', class_name: 'w-5 h-5' %}
     </a>
-  </div>
 
-  <div class="flex items-center">
+    {% if shop.customer_accounts_enabled %}
+      <a href="{{ routes.account_url }}" class="p-2 text-inherit" aria-label="Account">
+        {% render 'icon-account', class_name: 'w-5 h-5' %}
+      </a>
+    {% endif %}
+
     {% render 'cart-icon' %}
   </div>
 
@@ -75,7 +92,7 @@
       >
         {% render 'icon-close', color: 'black' %}
       </button>
-      <ul class="space-y-8 list-none">
+      <ul class="flex flex-col gap-[20px] w-[112px] h-[24px] opacity-100 list-none">
         {% for link in section.settings.menu.links %}
           <li>
             {% if link.links.size > 0 %}

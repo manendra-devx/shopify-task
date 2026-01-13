@@ -5,7 +5,8 @@ module.exports = {
     "./templates/**/*.liquid",
     "./sections/**/*.liquid",
     "./snippets/**/*.liquid",
-    "./blocks/**/*.liquid"
+    "./blocks/**/*.liquid",
+    "./assets/**/*.css"
   ],
   theme: {
     screens: {
@@ -19,6 +20,7 @@ module.exports = {
     extend: {
       fontFamily: {
         'primary': 'var(--font-primary--family)',
+        'cabin': ['Cabin', 'sans-serif'],
       },
     },
   },
