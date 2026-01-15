@@ -1,0 +1,203 @@
+{% assign config = product.metafields.custom.video_highlight.value %}
+{% if config != blank %}
+  <div
+    class="w-full relative overflow-hidden"
+    style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+  >
+    {% if config.title.value != blank %}
+      <h2 class="font-['Cabin'] font-bold text-[32px] md:text-[40px] text-[#333333] text-center mb-[24px]">
+        {{ config.title.value }}
+      </h2>
+    {% endif %}
+    {% if config.description.value != blank %}
+      <div class="font-['Cabin'] text-[16px] text-[#333333] text-center mb-[48px] px-4 max-w-[800px] mx-auto">
+        {{ config.description.value | newline_to_br }}
+      </div>
+    {% endif %}
+
+    <!--
+      Marquee Wrapper
+      We add a group class or specific ID to handle the hover pause simply via CSS
+    -->
+    <div class="video-marquee-wrapper w-full overflow-hidden flex items-center py-10">
+      <!-- Container 1 -->
+      <div
+        class="animate-video-marquee flex flex-shrink-0 items-center gap-[20px] pr-[20px]"
+        style="animation-duration: {{ section.settings.speed }}s;"
+      >
+        {% for item in config.videos.value %}
+          <div class="relative w-[280px] h-[500px] flex-shrink-0 rounded-[16px] overflow-hidden bg-gray-100 border-[1px] border-gray-100 shadow-sm cursor-pointer group transition-transform duration-300 hover:scale-105">
+            {% assign video_src = item.video.value | default: item %}
+            {% if video_src != blank %}
+              {{
+                video_src
+                | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  class: 'w-full h-full object-cover'
+              }}
+            {% else %}
+              <!-- Placeholder -->
+              <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-12 h-12 opacity-50"
+                >
+                  <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Container 2 (Duplicate) -->
+      <div
+        class="animate-video-marquee flex flex-shrink-0 items-center gap-[20px] pr-[20px]"
+        style="animation-duration: {{ section.settings.speed }}s;"
+      >
+        {% for item in config.videos.value %}
+          <div class="relative w-[280px] h-[500px] flex-shrink-0 rounded-[16px] overflow-hidden bg-gray-100 border-[1px] border-gray-100 shadow-sm cursor-pointer group transition-transform duration-300 hover:scale-105">
+            {% assign video_src = item.video.value | default: item %}
+            {% if video_src != blank %}
+              {{
+                video_src
+                | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  class: 'w-full h-full object-cover'
+              }}
+            {% else %}
+              <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-12 h-12 opacity-50"
+                >
+                  <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Container 3 (Duplicate for safety on wide screens) -->
+      <div
+        class="animate-video-marquee flex flex-shrink-0 items-center gap-[20px] pr-[20px]"
+        style="animation-duration: {{ section.settings.speed }}s;"
+      >
+        {% for item in config.videos.value %}
+          <div class="relative w-[280px] h-[500px] flex-shrink-0 rounded-[16px] overflow-hidden bg-gray-100 border-[1px] border-gray-100 shadow-sm cursor-pointer group transition-transform duration-300 hover:scale-105">
+            {% assign video_src = item.video.value | default: item %}
+            {% if video_src != blank %}
+              {{
+                video_src
+                | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  class: 'w-full h-full object-cover'
+              }}
+            {% else %}
+              <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-12 h-12 opacity-50"
+                >
+                  <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<style>
+  @keyframes video-marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-video-marquee {
+    animation: video-marquee-scroll linear infinite;
+  }
+
+  /* Pause animation on hover of the container */
+  .video-marquee-wrapper:hover .animate-video-marquee {
+    animation-play-state: paused;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Live Video Marquee",
+  "tag": "section",
+  "class": "section-video-marquee",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content controlled via Metaobject"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "unit": "s",
+      "label": "Animation Speed",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Live Video Marquee"
+    }
+  ]
+}
+{% endschema %}

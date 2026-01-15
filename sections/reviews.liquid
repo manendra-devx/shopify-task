@@ -1,115 +1,143 @@
-<div
-  class="w-full relative overflow-hidden"
-  style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
->
-  <div class="max-w-[1280px] mx-auto px-4 md:px-0">
-    <!-- Section Title -->
-    {% if section.settings.title != blank %}
-      <h2 class="font-['Cabin'] font-bold text-[32px] md:text-[40px] text-[#333333] text-center mb-[48px]">
-        {{ section.settings.title }}
-      </h2>
-    {% endif %}
+{% assign reviews = product.metafields.custom.reviews.value %}
+{% if reviews != blank %}
+  <div
+    class="w-full relative overflow-hidden"
+    style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+  >
+    <div class="max-w-[1280px] mx-auto px-4 md:px-0">
+      <!-- Section Title -->
+      {% if section.settings.title != blank %}
+        <h2 class="font-['Cabin'] font-bold text-[32px] md:text-[40px] text-[#333333] text-center mb-[48px]">
+          {{ section.settings.title }}
+        </h2>
+      {% endif %}
 
-    <!-- Reviews Grid -->
-    <div class="flex flex-wrap justify-center gap-2">
-      {% for block in section.blocks %}
-        <!-- Individual Review Card -->
-        <!--
-          Specs:
-          Width: 414px
-          Height: 220px (Desktop)
-          Border: 0.6px solid #3A3A3E1A
-          Radius: 8px
-          BG: #FFFFFF
-        -->
-        <div
-          class="review-card relative flex flex-col sm:flex-row bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden w-full sm:w-[414px] min-h-[220px] p-[10px]"
-          {{ block.shopify_attributes }}
-        >
-          <!-- Left Image: 146x200px, Radius 6px, Top/Left 10px (which is effectively padding in the flex container) -->
-          <div class="flex-shrink-0 w-full sm:w-[146px] h-[200px] mb-4 sm:mb-0">
-            {% if block.settings.main_image != blank %}
-              {{
-                block.settings.main_image
-                | image_url: width: 300
-                | image_tag: class: 'w-full h-full object-cover rounded-[6px]', loading: 'lazy'
-              }}
-            {% else %}
-              {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover rounded-[6px] bg-gray-100 text-gray-400' }}
-            {% endif %}
-          </div>
-
-          <!-- Right Content Column -->
-          <div class="flex-1 flex flex-col pl-0 sm:pl-[14px]">
-            <!-- Quote Icon SVG -->
-            <div class="mb-2">
-              <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <foreignObject x="-10" y="-10" width="44" height="42">
-                  <div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(5px);clip-path:url(#bgblur_0_0_1372_clip_path_{{ block.id }});height:100%;width:100%"></div>
-                </foreignObject>
-                <path data-figma-bg-blur-radius="10" d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z" fill="#E52888" fill-opacity="0.2"/>
-                <defs>
-                  <clipPath id="bgblur_0_0_1372_clip_path_{{ block.id }}" transform="translate(10 10)">
-                    <path d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z"/>
-                  </clipPath>
-                </defs>
-              </svg>
+      <!-- Reviews Grid -->
+      <div class="flex flex-wrap justify-center gap-2">
+        {% for review in reviews %}
+          <!-- Individual Review Card -->
+          <div
+            class="review-card relative flex flex-col sm:flex-row bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden w-full sm:w-[414px] min-h-[220px] p-[10px]"
+          >
+            <!-- Left Image -->
+            <div class="flex-shrink-0 w-full sm:w-[146px] h-[200px] mb-4 sm:mb-0">
+              {% if review.main_image.value != blank %}
+                {{
+                  review.main_image.value
+                  | image_url: width: 300
+                  | image_tag: class: 'w-full h-full object-cover rounded-[6px]', loading: 'lazy'
+                }}
+              {% else %}
+                {{
+                  'image'
+                  | placeholder_svg_tag: 'w-full h-full object-cover rounded-[6px] bg-gray-100 text-gray-400'
+                }}
+              {% endif %}
             </div>
 
-            <!-- Stars -->
-            <div class="flex gap-1 mb-2">
-              {% for i in (1..5) %}
-                {% if i <= block.settings.rating %}
+            <!-- Right Content Column -->
+            <div class="flex-1 flex flex-col pl-0 sm:pl-[14px]">
+              <!-- Quote Icon SVG -->
+              <div class="mb-2">
+                <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <foreignObject x="-10" y="-10" width="44" height="42">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(5px);clip-path:url(#bgblur_0_0_1372_clip_path_{{ review.system.id }});height:100%;width:100%"></div>
+                  </foreignObject>
+                  <path data-figma-bg-blur-radius="10" d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z" fill="#E52888" fill-opacity="0.2"/>
+                  <defs>
+                    <clipPath id="bgblur_0_0_1372_clip_path_{{ review.system.id }}" transform="translate(10 10)">
+                      <path d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
+
+              <!-- Stars -->
+              <div class="flex gap-1 mb-2">
+                {% assign rating_val = review.rating.value | default: 5 %}
+                {% assign full_stars = rating_val | floor %}
+                {% assign remainder = rating_val | minus: full_stars %}
+                {% assign has_half_star = false %}
+                {% if remainder >= 0.4 and remainder <= 0.9 %}
+                  {% assign has_half_star = true %}
+                {% elsif remainder > 0.9 %}
+                  {% assign full_stars = full_stars | plus: 1 %}
+                {% endif %}
+
+                {% for i in (1..full_stars) %}
                   <!-- Filled Star (Orange) -->
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9900" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#FF9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                {% else %}
-                  <!-- Empty Star (Gray) -->
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#E5E7EB"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                {% endfor %}
+
+                {% if has_half_star %}
+                  <!-- Half Star -->
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="half_star_{{ review.system.id }}">
+                        <stop offset="50%" stop-color="#FF9900" />
+                        <stop offset="50%" stop-color="#E5E7EB" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="url(#half_star_{{ review.system.id }})" stroke-width="0" />
+                    <!-- Outline to match style -->
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="url(#half_star_{{ review.system.id }})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 {% endif %}
-              {% endfor %}
-            </div>
 
-            <!-- Review Text -->
-            <div class="flex-1">
-              <p class="font-['Cabin'] text-[14px] leading-[140%] text-[#3A3A3E]">
-                {{ block.settings.review_text }}
-              </p>
-            </div>
+                {% assign stars_shown = full_stars %}
+                {% if has_half_star %}{% assign stars_shown = stars_shown | plus: 1 %}{% endif %}
+                {% assign empty_stars = 5 | minus: stars_shown %}
 
-            <!-- Reviewer Profile -->
-            <div class="flex items-center gap-2 mt-auto pt-2">
-              <div class="w-[24px] h-[24px] rounded-full overflow-hidden bg-gray-200">
-                {% if block.settings.reviewer_avatar != blank %}
-                  {{
-                    block.settings.reviewer_avatar
-                    | image_url: width: 48
-                    | image_tag: class: 'w-full h-full object-cover'
-                  }}
-                {% else %}
-                  {% render 'icon-account', class_name: 'w-full h-full text-gray-400 p-0.5' %}
+                {% if empty_stars > 0 %}
+                  {% for i in (1..empty_stars) %}
+                    <!-- Empty Star (Gray) -->
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#E5E7EB"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {% endfor %}
                 {% endif %}
               </div>
-              <span class="font-['Cabin'] font-bold text-[14px] text-[#333333]">
-                {{ block.settings.reviewer_name }}
-              </span>
+
+              <!-- Review Text -->
+              <div class="flex-1">
+                <p class="font-['Cabin'] text-[14px] leading-[140%] text-[#3A3A3E]">
+                  {{ review.review_text.value | newline_to_br }}
+                </p>
+              </div>
+
+              <!-- Reviewer Profile -->
+              <div class="flex items-center gap-2 mt-auto pt-2">
+                <div class="w-[24px] h-[24px] rounded-full overflow-hidden bg-gray-200">
+                  {% if review.reviewer_avatar.value != blank %}
+                    {{
+                      review.reviewer_avatar.value
+                      | image_url: width: 48
+                      | image_tag: class: 'w-full h-full object-cover'
+                    }}
+                  {% else %}
+                    {% render 'icon-account', class_name: 'w-full h-full text-gray-400 p-0.5' %}
+                  {% endif %}
+                </div>
+                <span class="font-['Cabin'] font-bold text-[14px] text-[#333333]">
+                  {{ review.reviewer_name.value }}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
+{% endif %}
 
 {% schema %}
 {
@@ -150,47 +178,7 @@
       "default": 48
     }
   ],
-  "blocks": [
-    {
-      "type": "review",
-      "name": "Review",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "main_image",
-          "label": "Main Image (Left)",
-          "info": "Recommended: 146x200px"
-        },
-        {
-          "type": "range",
-          "id": "rating",
-          "min": 1,
-          "max": 5,
-          "step": 1,
-          "label": "Star Rating",
-          "default": 5
-        },
-        {
-          "type": "textarea",
-          "id": "review_text",
-          "label": "Review Text",
-          "default": "My indie is super picky and she LOVES these Bellie Bites by Wellie. Her breath smells fresher! My indie is super picky and she LOVES these Bellie Bites."
-        },
-        {
-          "type": "image_picker",
-          "id": "reviewer_avatar",
-          "label": "Reviewer Avatar",
-          "info": "Small circular headshot"
-        },
-        {
-          "type": "text",
-          "id": "reviewer_name",
-          "label": "Reviewer Name",
-          "default": "Mr. Marc John"
-        }
-      ]
-    }
-  ],
+  "blocks": [],
   "presets": [
     {
       "name": "Customer Reviews"
