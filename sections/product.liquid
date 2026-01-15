@@ -1,119 +1,147 @@
-<div class="max-w-[1440px] mx-auto px-4 md:px-8 py-8 md:py-12">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+<div class="max-w-[1440px] mx-auto px-4 md:px-[80px] py-8 md:pt-[32px] md:pb-[48px]">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Left Column: Product Gallery -->
-    <div class="product-gallery flex flex-col gap-4">
-      <!-- Main Image Stage -->
-      <div class="relative w-full aspect-square bg-[#F9F3F1] rounded-2xl overflow-hidden group">
-        {% if product.selected_or_first_available_variant.featured_media != null %}
-          {% assign featured_media = product.selected_or_first_available_variant.featured_media %}
-        {% else %}
-          {% assign featured_media = product.featured_media %}
-        {% endif %}
-
-        <img
-          id="MainImage"
-          src="{{ featured_media | image_url: width: 800 }}"
-          alt="{{ featured_media.alt | escape }}"
-          class="w-full h-full object-contain p-8 transition-opacity duration-300 ease-in-out"
-          width="800"
-          height="800"
-        >
-
-        <!-- Slider Navigation -->
-        {% if product.media.size > 1 %}
-          <button
-            class="absolute top-1/2 left-4 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 hover:bg-gray-50 focus:outline-none z-10"
-            onclick="moveGallery(-1)"
-            aria-label="Previous image"
-          >
-            {% render 'icon-chevron-left', class_name: 'w-6 h-6' %}
-          </button>
-          <button
-            class="absolute top-1/2 right-4 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-800 hover:bg-gray-50 focus:outline-none z-10"
-            onclick="moveGallery(1)"
-            aria-label="Next image"
-          >
-            {% render 'icon-chevron-right', class_name: 'w-6 h-6' %}
-          </button>
-        {% endif %}
-      </div>
-
-      <!-- Thumbnails -->
-      {% if product.media.size > 1 %}
-        <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
+    <div class="product-gallery flex flex-col gap-6 w-full lg:max-w-[630px] flex-shrink-0">
+      <!-- Main Image Stage (Embla) -->
+      <div
+        class="embla embla--main relative w-full aspect-square bg-[#F9F3F1] rounded-[8px] overflow-hidden group"
+        id="MainCarousel"
+      >
+        <div class="embla__container flex h-full">
           {% for media in product.media %}
-            <button
-              class="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 bg-[#F9F3F1] rounded-lg overflow-hidden border-2 {% if media.id == featured_media.id %}border-[#025A60]{% else %}border-transparent{% endif %} hover:border-[#025A60] transition-all"
-              onclick="updateMainImage('{{ media | image_url: width: 800 }}', this)"
-            >
+            <div class="embla__slide flex-[0_0_100%] min-w-0 h-full relative">
               <img
-                src="{{ media | image_url: width: 200 }}"
+                src="{{ media | image_url: width: 1260 }}"
                 alt="{{ media.alt | escape }}"
-                class="w-full h-full object-contain p-2"
-                width="100"
-                height="100"
+                class="w-full h-full object-cover"
+                width="1260"
+                height="1260"
               >
-            </button>
+            </div>
           {% endfor %}
         </div>
-      {% endif %}
+      </div>
+
+      <!-- Thumbnails (Embla) -->
+      <div class="flex items-center gap-4 mt-2">
+        <!-- Prev Button -->
+        <button
+          id="PrevButton"
+          class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 flex-shrink-0"
+        >
+          {% render 'icon-chevron-left', class_name: 'w-4 h-4 text-gray-600' %}
+        </button>
+
+        <div class="embla embla--thumb overflow-hidden flex-1" id="ThumbCarousel">
+          <div class="embla__container flex gap-4 pr-4">
+            {% for media in product.media %}
+              <button
+                class="embla__slide--thumb w-[70px] h-[70px] flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all border-transparent opacity-50 relative"
+                onclick="scrollToSlide({{ forloop.index0 }})"
+              >
+                <img
+                  src="{{ media | image_url: width: 160 }}"
+                  class="w-full h-full object-cover"
+                  alt="{{ media.alt }}"
+                  width="160"
+                  height="160"
+                >
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Next Button -->
+        <button
+          id="NextButton"
+          class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 flex-shrink-0"
+        >
+          {% render 'icon-chevron-right', class_name: 'w-4 h-4 text-gray-600' %}
+        </button>
+      </div>
     </div>
 
     <!-- Right Column: Product Info -->
-    <div class="product-info flex flex-col gap-6">
+    <div class="product-info flex flex-col gap-6 w-full lg:max-w-[626px] lg:mt-4">
       <!-- Badges / Header -->
       <div class="flex items-center justify-between">
-        <span class="bg-[#D94378] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-          {{ product.metafields.custom.badge | default: "India's #1 Advanced Dog Food" }}
-        </span>
+        {% if product.metafields.custom.badge != blank %}
+          <span class="bg-[#D94378] text-white text-[16px] text-[#D4E391] font-bold px-3 py-1 rounded-full uppercase tracking-[0px] font-['Cafeteria'] leading-[100%] text-center align-middle not-italic">
+            {{ product.metafields.custom.badge }}
+          </span>
+        {% endif %}
 
-        <div class="flex items-center gap-1 text-[#F5A623]">
-          {% for i in (1..5) %}
-            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-            </svg>
-          {% endfor %}
-          <span class="text-gray-600 text-sm font-medium ml-1">4.4 (1,900+ Reviews)</span>
+        <div class="flex items-center gap-1 text-[#F5A623] ml-auto">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+          <span class="text-[#025A60] font-normal text-[16px] leading-[100%] tracking-[0px] font-['Cabin'] text-center align-middle ml-1"
+            >4.4 (1,900+ Reviews)</span
+          >
         </div>
       </div>
 
-      <!-- Title -->
-      <h1 class="text-4xl md:text-5xl font-extrabold text-[#333] font-['Cabin']">
-        {{ product.title }}
-      </h1>
-
-      <!-- Price -->
-      <div class="flex items-baseline gap-3">
-        <span class="text-2xl font-bold text-[#333]" id="ProductPrice">
-          {{ product.selected_or_first_available_variant.price | money }}
-        </span>
-        {% if product.selected_or_first_available_variant.compare_at_price
-            > product.selected_or_first_available_variant.price
-        %}
-          <span class="text-lg text-gray-500 line-through">
-            {{ product.selected_or_first_available_variant.compare_at_price | money }}
-          </span>
-        {% endif %}
-        <span class="text-xs text-gray-500">MRP Inclusive of all taxes</span>
+      <!-- Title & Price Group -->
+      <div class="flex flex-col gap-2 mb-2">
+        <!-- Title -->
+        <h1 class="w-full lg:w-[409px] h-auto mt-1 text-[28px] lg:text-[36px] font-normal text-[#3A3A3E] font-['Harond'] leading-[110%] tracking-[0%] align-middle">
+          {{ product.title }}
+        </h1>
+        <!-- Price -->
+        <div class="flex flex-col w-full lg:w-[201px] gap-[6px]">
+          <div class="flex items-baseline gap-2 whitespace-nowrap">
+            <span
+              class="text-[22px] font-semibold text-[#3A3A3E] font-['Cabin'] leading-[100%] tracking-[0%] text-center align-middle"
+              id="ProductPrice"
+            >
+              {{ product.selected_or_first_available_variant.price | money }}
+            </span>
+            <span
+              id="ComparePrice"
+              class="text-[14px] font-normal text-[#3A3A3E] font-['Cabin'] leading-[100%] tracking-[0%] text-center align-middle line-through {% unless product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}hidden{% endunless %}"
+            >
+              {{ product.selected_or_first_available_variant.compare_at_price | money }}
+            </span>
+          </div>
+          <span class="w-full text-[12px] font-normal text-[#3A3A3E] font-['Cabin'] leading-[100%] tracking-[0%] align-middle text-left"
+            >MRP Inclusive of all taxes</span
+          >
+        </div>
       </div>
 
       <!-- Highlights Box -->
-      <div class="bg-[#FDF2F4] border border-[#F8D7DA] rounded-lg p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-[#D94378] rounded-full flex items-center justify-center flex-shrink-0 text-white">
-          <!-- Heart/Health Icon Placeholder -->
-          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
+      {% assign highlight = product.metafields.custom.highlight.value %}
+      {% if highlight != blank %}
+        <div class="flex items-center gap-[10px] w-full lg:w-[409px] h-auto lg:h-[55px] pt-[8.5px] pr-[10px] pb-[8.5px] pl-[10px] border-[0.4px] border-[#E52888] rounded-[6px] bg-[#FDF2F4]">
+          <div class="w-[30px] h-[30px] bg-[#D94378] rounded-full flex items-center justify-center flex-shrink-0 text-white overflow-hidden">
+            {% if highlight.icon != blank %}
+              {{
+                highlight.icon
+                | image_url: width: 48
+                | image_tag: class: 'w-[15px] h-[15px] object-contain brightness-0 invert'
+              }}
+            {% endif %}
+          </div>
+          <div>
+            <h3 class="flex-1 lg:w-[289px] h-auto font-bold text-[#3A3A3E] text-[16px] font-['Cabin'] leading-[100%] tracking-[0%] align-middle">
+              {{ highlight.title }}
+            </h3>
+            <p class="flex-1 lg:w-[289px] h-auto text-[12px] font-normal text-[#3A3A3E] font-['Cabin'] leading-[100%] tracking-[0%] align-middle">
+              {{ highlight.description }}
+              {% if highlight.link != blank %}
+                <a
+                  href="{{ highlight.link }}"
+                  class="font-medium underline decoration-solid decoration-0 underline-offset-0"
+                >
+                  {{- highlight.link_text | default: 'See Reports' -}}
+                </a>
+              {% endif %}
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 class="font-bold text-gray-800 text-sm md:text-base">30% Digestive Health Improvement</h3>
-          <p class="text-xs text-gray-600">
-            Results may vary based on pet size, diet, and <a href="#" class="underline">See Reports</a>
-          </p>
-        </div>
-      </div>
+      {% endif %}
 
-      {% form 'product', product, id: 'product-form', class: 'flex flex-col gap-6' %}
+      {% form 'product', product, id: 'product-form', class: 'flex flex-col gap-8 mt-2' %}
         <input
           type="hidden"
           name="id"
@@ -122,170 +150,310 @@
         >
 
         <!-- Variant Picker: Size -->
-        {% unless product.has_only_default_variant %}
-          <div class="flex flex-col gap-3">
-            <span class="text-sm font-bold uppercase tracking-wide text-gray-500 underline decoration-solid underline-offset-4"
-              >Select Size</span
-            >
-            <div class="flex flex-wrap gap-x-4 gap-y-6 pt-2">
-              {% for variant in product.variants %}
-                {% assign is_selected = false %}
-                {% if product.selected_or_first_available_variant.id == variant.id %}
-                  {% assign is_selected = true %}
+        <div class="flex flex-col gap-3 w-full lg:max-w-[626px]">
+          <span class="text-sm font-bold uppercase tracking-wide text-gray-500 decoration-solid">Select Size</span>
+          <div class="flex flex-wrap gap-3">
+            <!-- Dynamic Discount Calculation -->
+            {% for variant in product.variants %}
+              {% assign is_selected = false %}
+              {% if product.selected_or_first_available_variant.id == variant.id %}
+                {% assign is_selected = true %}
+              {% endif %}
+
+              {% assign discount_percentage = 0 %}
+              {% if variant.compare_at_price > variant.price %}
+                {% assign price_difference = variant.compare_at_price | minus: variant.price %}
+                {% assign discount_percentage = price_difference
+                  | times: 100.0
+                  | divided_by: variant.compare_at_price
+                  | round
+                %}
+              {% endif %}
+
+              <div class="relative group">
+                {% if variant.metafields.custom.badge != blank %}
+                  <span
+                    class="absolute -top-[7px] z-10 h-[14px] min-w-[56px] bg-[#D4E391] p-[1px]"
+                    style="clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 50%, 100% 100%, 0 100%); filter: drop-shadow(0.5px 0.5px 0px #D4E391);"
+                  >
+                    <span class="w-full h-full bg-[#E52888] flex items-center justify-center pl-[2px] pr-[8px]">
+                      <span class="text-[#D4E391] text-[10px] font-['Cafeteria'] font-bold leading-[100%] uppercase whitespace-nowrap">
+                        {{- variant.metafields.custom.badge -}}
+                      </span>
+                    </span>
+                  </span>
                 {% endif %}
 
                 <button
                   type="button"
                   class="
-                    variant-btn relative px-6 py-3 rounded-full text-sm font-bold transition-all border
+                    relative variant-btn px-[19px] py-[8px] rounded-[28px] text-[16px] leading-[24px] font-bold font-['Cabin'] transition-all border
                     {% if is_selected %}
-                      bg-[#E0F2F1] text-[#004D40] border-transparent ring-1 ring-[#004D40]
+                      bg-[#025A60] text-white border-[#025A60]
                     {% else %}
-                      bg-[#EEE] text-gray-700 border-transparent hover:bg-gray-200
+                      bg-[#025A6014] text-[#025A60] border-transparent hover:border-[#025A60]
                     {% endif %}
                   "
                   data-variant-id="{{ variant.id }}"
                   data-price="{{ variant.price | money }}"
+                  data-price-cents="{{ variant.price }}"
                   data-compare-at-price="{{ variant.compare_at_price | money }}"
+                  data-compare-cents="{{ variant.compare_at_price }}"
                   onclick="selectVariant(this)"
-                  style="min-width: 120px;"
                 >
-                  <!-- Badges logic based on variant title text matching the screenshot intent -->
-                  <!-- Example logic: 500g -> Most Ordered, 1kg -> Best Deal -->
-                  {% if variant.title contains '500g' %}
-                    <div
-                      class="absolute -top-3 left-0 bg-[#F06292] text-white text-[10px] uppercase font-bold px-2 py-0.5"
-                      style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 10% 50%); border-radius: 2px 0 0 2px; left: 10px;"
-                    >
-                      Most Ordered
-                    </div>
-                  {% elsif variant.title contains '1kg' %}
-                    <div
-                      class="absolute -top-3 left-0 bg-[#D81B60] text-white text-[10px] uppercase font-bold px-2 py-0.5"
-                      style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 10% 50%); border-radius: 2px 0 0 2px; left: 10px;"
-                    >
-                      Best Deal
-                    </div>
-                  {% endif %}
-
                   {{ variant.title }}
+                  {% if forloop.first %}
+                    <span>(1 PACK)</span>
+                  {% elsif discount_percentage > 0 %}
+                    <span>({{ discount_percentage }}% Off)</span>
+                  {% endif %}
                 </button>
-              {% endfor %}
-            </div>
+              </div>
+            {% endfor %}
           </div>
-        {% endunless %}
+        </div>
 
         <!-- Quantity & Add to Cart -->
-        <div class="flex items-center gap-4 mt-2">
-          <!-- Quantity -->
-          <div class="flex items-center justify-between border border-[#025A60] rounded-lg w-[140px] h-[50px] bg-[#F5F5F5] overflow-hidden">
+        <div class="flex flex-col gap-6 w-full lg:max-w-[500px]">
+          <div class="flex gap-6 w-full">
+            <!-- Quantity Selector -->
+            <div class="w-[130px] h-[48px] rounded-[8px] border-[0.8px] border-[#025A60] p-[7px] flex items-center justify-between flex-shrink-0">
+              <button
+                type="button"
+                onclick="updateQty(-1)"
+                class="w-[34px] h-[34px] bg-[#025A6014] rounded-[6px] flex items-center justify-center flex-shrink-0"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.33334 7H11.6667" stroke="#025A60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+
+              <input
+                type="text"
+                name="quantity"
+                id="Quantity"
+                value="01"
+                min="1"
+                class="w-auto min-w-[30px] flex-1 bg-transparent text-center font-['Cabin'] font-medium text-[18px] text-[#025A60] p-0 border-none focus:ring-0 leading-[100%]"
+              >
+
+              <button
+                type="button"
+                onclick="updateQty(1)"
+                class="w-[34px] h-[34px] bg-[#025A6014] rounded-[6px] flex items-center justify-center flex-shrink-0"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 2.33334V11.6667M2.33334 7H11.6667" stroke="#025A60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Add to Cart -->
             <button
-              type="button"
-              class="w-12 h-full flex items-center justify-center text-gray-700 hover:bg-gray-200"
-              onclick="updateQty(-1)"
+              type="submit"
+              name="add"
+              class="flex-1 lg:w-[346px] h-[48px] bg-[#025A60] rounded-[8px] flex items-center justify-center gap-2 hover:bg-[#024044] transition-colors"
             >
-              {% render 'icon-minus', class_name: 'w-4 h-4' %}
-            </button>
-            <input
-              type="number"
-              name="quantity"
-              id="Quantity"
-              value="1"
-              min="1"
-              class="w-full h-full text-center bg-transparent border-none focus:outline-none font-bold text-lg text-[#025A60]"
-              readonly
-            >
-            <button
-              type="button"
-              class="w-12 h-full flex items-center justify-center text-gray-700 hover:bg-gray-200"
-              onclick="updateQty(1)"
-            >
-              {% render 'icon-plus', class_name: 'w-4 h-4' %}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#F9F3F1"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-shopping-cart"
+              >
+                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
+              <span class="font-['Cabin'] font-medium text-[16px] text-[#F9F3F1] uppercase leading-none mt-[2px]"
+                >Add to Cart</span
+              >
             </button>
           </div>
 
-          <!-- Add to Cart Button -->
+          <!-- Buy It Now -->
           <button
-            type="submit"
-            name="add"
-            class="flex-1 bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-md hover:bg-[#024a4f] transition-all flex items-center justify-center gap-2 uppercase tracking-wide"
+            type="button"
+            class="w-full h-[48px] bg-[#025A60] rounded-[8px] flex items-center justify-center gap-[8px] px-[10px] py-[12px] font-['Cabin'] font-medium text-[16px] text-[#F9F3F1] leading-[100%] uppercase transition-all hover:bg-[#024a4f]"
           >
-            {% render 'icon-cart', class_name: 'w-5 h-5 fill-white' %}
-            Add to Cart
+            Buy It Now
           </button>
         </div>
-
-        <!-- Buy It Now -->
-        <button
-          type="button"
-          class="w-full bg-[#025A60] text-white font-bold text-lg rounded-lg h-[50px] shadow-md hover:bg-[#024a4f] transition-all uppercase tracking-wide"
-        >
-          Buy It Now
-        </button>
       {% endform %}
 
-      <!-- Trust Badges / Offers -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="bg-[#F0FDF4] border border-dashed border-[#025A60] rounded-lg p-3 flex items-start gap-3">
-          <div class="p-1 bg-white rounded-full border border-[#025A60]">
-            <svg class="w-4 h-4 text-[#025A60]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-[#025A60] font-bold text-sm">Get it for ₹3,190</p>
-            <p class="text-xs text-gray-500">Copy code to get 10% off</p>
-          </div>
+      <!-- Dynamic Coupons Section -->
+      {% if product.metafields.custom.coupons.value != blank %}
+        <div class="flex flex-wrap gap-3 mt-4" id="CouponContainer">
+          {% for coupon in product.metafields.custom.coupons.value %}
+            <div
+              class="relative flex items-center justify-between w-[264px] h-[56px] bg-[#025A6014] border-[0.5px] border-dashed border-[#025A60CC] rounded-lg px-3 transition-all hover:bg-[#E6F4EA]"
+            >
+              <!-- Left Notch -->
+              <span
+                class="absolute -left-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-white rounded-full border-r-[0.5px] border-dashed border-[#025A60CC] z-10"
+              ></span>
+              <!-- Right Notch -->
+              <span
+                class="absolute -right-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-white rounded-full border-l-[0.5px] border-dashed border-[#025A60CC] z-10"
+              ></span>
+
+              <!-- Left Icon -->
+              <div class="flex-shrink-0 text-[#025A60]">
+                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 3.75L18.6594 6.1654L22.955 7.04505L23.8346 11.3406L26.25 15L23.8346 18.6594L22.955 22.955L18.6594 23.8346L15 26.25L11.3406 23.8346L7.04505 22.955L6.1654 18.6594L3.75 15L6.1654 11.3406L7.04505 7.04505L11.3406 6.1654L15 3.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18.75 11.25L11.25 18.75M12.5 11.875C12.5 12.2202 12.2202 12.5 11.875 12.5C11.5298 12.5 11.25 12.2202 11.25 11.875C11.25 11.5298 11.5298 11.25 11.875 11.25C12.2202 11.25 12.5 11.5298 12.5 11.875ZM18.75 18.125C18.75 18.4702 18.4702 18.75 18.125 18.75C17.7798 18.75 17.5 18.4702 17.5 18.125C17.5 17.7798 17.7798 17.5 18.125 17.5C18.4702 17.5 18.75 17.7798 18.75 18.125Z" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+              <!-- Center Text -->
+              <div class="flex-1 flex flex-col items-start justify-center ml-3">
+                <p
+                  class="text-[#025A60] font-['Cafeteria'] font-bold text-[18px] leading-none coupon-price-text"
+                  data-discount="{{ coupon.discount_percentage }}"
+                >
+                  Get it for <span class="dynamic-price">...</span>
+                </p>
+                <p class="text-[#025A60] font-['Cabin'] font-normal text-[12px] leading-none mt-[2px]">
+                  {{ coupon.description }}
+                </p>
+              </div>
+
+              <!-- Right Copy Button -->
+              <button
+                type="button"
+                onclick="copyCoupon('{{ coupon.title }}', this)"
+                class="flex-shrink-0 text-[#025A60] hover:text-[#024044] transition-colors"
+                title="Copy Coupon"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="copy-icon"
+                >
+                  <path d="M15 16.5V20H9.5H4V8H8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M20 4H9V16H14.5H20V10V4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          {% endfor %}
         </div>
-        <div class="bg-[#F0FDF4] border border-dashed border-[#025A60] rounded-lg p-3 flex items-start gap-3">
-          <div class="p-1 bg-white rounded-full border border-[#025A60]">
-            <svg class="w-4 h-4 text-[#025A60]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-[#025A60] font-bold text-sm">Get it for ₹3,190</p>
-            <p class="text-xs text-gray-500">Copy code to get 10% off</p>
-          </div>
-        </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 </div>
 
 <script>
-  function moveGallery(direction) {
-    // Basic logic to swap images - for MVP we just rely on updating Main Image source
-    // In a real slider, this would scroll the container or change index
-    const thumbnails = document.querySelectorAll('.product-gallery button img');
-    if (thumbnails.length > 0) {
-      // logic to implement cyclic slider
-    }
-  }
-
-  function updateMainImage(src, thumbnail) {
-    document.getElementById('MainImage').src = src;
-    // Update active border state
-    document.querySelectorAll('.product-gallery button').forEach((btn) => {
-      btn.classList.remove('border-[#025A60]');
-      btn.classList.add('border-transparent');
-    });
-    thumbnail.classList.remove('border-transparent');
-    thumbnail.classList.add('border-[#025A60]');
-  }
-
   function updateQty(change) {
     const input = document.getElementById('Quantity');
     let val = parseInt(input.value);
+    if (isNaN(val)) val = 1;
     val += change;
     if (val < 1) val = 1;
-    input.value = val;
+    input.value = val < 10 ? '0' + val : val;
   }
+
+  function copyCoupon(code, btn) {
+    navigator.clipboard.writeText(code).then(() => {
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="text-[10px] font-bold text-[#025A60]">COPIED</span>';
+
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+      }, 2000);
+    });
+  }
+
+  // Update "Get it for..." prices based on current variant price and coupon discount
+  function updateCouponPrices(currentPriceCents) {
+    document.querySelectorAll('.coupon-price-text').forEach(el => {
+      const discountPercent = parseFloat(el.dataset.discount);
+      if (!isNaN(discountPercent)) {
+        // Calculate discounted price
+        const discountedParam = currentPriceCents * (1 - discountPercent / 100);
+        // Format money (Assuming standard Shopify formatting or simple JS formatting)
+        // Since we don't have the liquid money filter in JS, we'll use a basic formatter or look for a global formatter.
+        // For now, doing a simple generic format:
+        const formatted = '₹' + (Math.round(discountedParam / 100)).toLocaleString('en-IN');
+        el.querySelector('.dynamic-price').textContent = formatted;
+      }
+    });
+  }
+
+  // Embla Carousel Integration
+  document.addEventListener('DOMContentLoaded', function () {
+    const mainNode = document.getElementById('MainCarousel');
+    const thumbNode = document.getElementById('ThumbCarousel');
+    const prevBtn = document.getElementById('PrevButton');
+    const nextBtn = document.getElementById('NextButton');
+
+    // Initial Coupon Price Update
+    // Use price-cents if available, otherwise fallback
+    const initialPriceBtn = document.querySelector('.variant-btn[data-price-cents]');
+    if (initialPriceBtn) {
+       updateCouponPrices(parseInt(initialPriceBtn.dataset.priceCents));
+    } else {
+       // Fallback to first variant price logic if needed, but data-price-cents is reliable now
+       const initialPricev = {{ product.selected_or_first_available_variant.price }};
+       updateCouponPrices(initialPricev);
+    }
+
+    if (mainNode && thumbNode && window.EmblaCarousel) {
+      // Initialize Main Carousel
+      const mainEmbla = EmblaCarousel(mainNode, { loop: true });
+
+      // Initialize Thumbnail Carousel
+      const thumbEmbla = EmblaCarousel(thumbNode, {
+        containScroll: 'keepSnaps',
+        dragFree: true,
+        axis: 'x',
+      });
+
+      // Navigation
+      if (prevBtn) prevBtn.addEventListener('click', mainEmbla.scrollPrev);
+      if (nextBtn) nextBtn.addEventListener('click', mainEmbla.scrollNext);
+
+      // Sync Thumbnails
+      const syncThumbs = () => {
+        const index = mainEmbla.selectedScrollSnap();
+        const slides = thumbNode.querySelectorAll('.embla__slide--thumb');
+
+        // Update Active State
+        slides.forEach((slide, i) => {
+          if (i === index) {
+            slide.classList.remove('border-transparent', 'opacity-50');
+            slide.classList.add('border-[#025A60]', 'opacity-100');
+          } else {
+            slide.classList.add('border-transparent', 'opacity-50');
+            slide.classList.remove('border-[#025A60]', 'opacity-100');
+          }
+        });
+
+        // Scroll Thumb into View
+        thumbEmbla.scrollTo(index);
+      };
+
+      mainEmbla.on('select', syncThumbs);
+      mainEmbla.on('init', syncThumbs);
+
+      // Expose scrollToSlide globally for click handlers
+      window.scrollToSlide = (index) => {
+        mainEmbla.scrollTo(index);
+      };
+    }
+  });
 
   function selectVariant(btn) {
     const variantId = btn.dataset.variantId;
     const price = btn.dataset.price;
-    const comparePrice = btn.dataset.compareAtPrice;
+    const priceCents = parseInt(btn.dataset.priceCents);
+    const compareAtPrice = btn.dataset.compareAtPrice;
+    const compareCents = parseInt(btn.dataset.compareCents);
 
     // Update Hidden Input
     document.getElementById('SelectedVariantId').value = variantId;
@@ -293,13 +461,29 @@
     // Update UI Price
     document.getElementById('ProductPrice').textContent = price;
 
+    // Update Compare Price
+    const compareEl = document.getElementById('ComparePrice');
+    if (!isNaN(compareCents) && compareCents > priceCents) {
+      compareEl.textContent = compareAtPrice;
+      compareEl.classList.remove('hidden');
+    } else {
+      compareEl.classList.add('hidden');
+    }
+
+    // Trigger Coupon Update
+    if (!isNaN(priceCents)) {
+      updateCouponPrices(priceCents);
+    }
+
     // Update Toggle State
     document.querySelectorAll('.variant-btn').forEach((b) => {
-      b.classList.remove('ring-2', 'ring-[#025A60]', 'bg-[#F0FDF4]', 'border-[#025A60]');
-      b.classList.add('bg-gray-50', 'border-gray-200');
+      // Reset to default state
+      b.classList.remove('bg-[#025A60]', 'text-white', 'border-[#025A60]');
+      b.classList.add('bg-[#025A6014]', 'text-[#025A60]', 'border-transparent');
     });
-    btn.classList.remove('bg-gray-50', 'border-gray-200');
-    btn.classList.add('ring-2', 'ring-[#025A60]', 'bg-[#F0FDF4]', 'border-[#025A60]');
+    // Set active state
+    btn.classList.remove('bg-[#025A6014]', 'text-[#025A60]', 'border-transparent');
+    btn.classList.add('bg-[#025A60]', 'text-white', 'border-[#025A60]');
   }
 </script>
 
@@ -308,7 +492,6 @@
   "name": "Product Information",
   "tag": "section",
   "settings": [],
-  "blocks": [],
   "presets": [
     {
       "name": "Product Information"

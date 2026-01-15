@@ -1,6 +1,6 @@
-<header class="relative flex items-center justify-between px-4 md:px-8 w-full max-w-[1440px] h-[75px] opacity-100 mx-auto z-40 bg-white">
+<header class="relative flex items-center justify-between px-4 md:px-8 max-w-[1440px] w-full h-[100px] opacity-100 mx-auto z-40 bg-[#F9F3F1] border-[0.5px] border-[#3A3A3E33] shadow-[0px_4px_10px_0px_#3A3A3E0D]">
   <!-- Part 1: Logo & Mobile Menu Toggle -->
-  <div class="flex flex-1 items-center justify-start gap-4">
+  <div class=" items-center justify-start gap-4">
     <button
       type="button"
       class="block md:hidden bg-transparent border-none cursor-pointer p-2"
@@ -25,31 +25,37 @@
   </div>
 
   <!-- Part 2: Navigation (Desktop) -->
-  <nav class="hidden md:flex flex-1 justify-center" aria-label="Main navigation">
-    <ul class="flex items-center gap-[40px] opacity-100 list-none">
+  <nav
+    class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center p-0"
+    aria-label="Main navigation"
+  >
+    <ul class="flex items-center justify-center gap-[40px] w-[480px] h-[75px] bg-[#F9F3F1] p-[10px] list-none rounded-none">
       {% for link in section.settings.menu.links %}
         <li class="relative">
           <div class="group">
             {% if link.links.size > 0 %}
-              <span class="flex items-center gap-1 text-inherit cursor-pointer hover:underline hover:underline-offset-4">
+              <span class="flex items-center gap-1 cursor-pointer font-['Cabin'] font-medium text-[16px] text-[#025A60] leading-[100%] hover:opacity-80 text-center justify-center">
                 {{ link.title }}
                 {% render 'icon-chevron-down',
-                  class_name: 'w-4 h-4 transition-transform duration-200 group-hover:rotate-180'
+                  class_name: 'w-4 h-4 transition-transform duration-200 group-hover:rotate-180 text-[#025A60]'
                 %}
               </span>
             {% else %}
-              <a href="{{ link.url }}" class="no-underline hover:underline hover:underline-offset-4 text-inherit">
+              <a
+                href="{{ link.url }}"
+                class="no-underline font-['Cabin'] font-medium text-[16px] text-[#025A60] leading-[100%] hover:opacity-80 text-center block w-full"
+              >
                 {{ link.title }}
               </a>
             {% endif %}
 
             {% if link.links.size > 0 %}
-              <ul class="absolute top-full left-0 min-w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2 mt-2 list-none">
+              <ul class="absolute top-full left-1/2 -translate-x-1/2 min-w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2 mt-2 list-none border border-gray-100 text-left">
                 {% for child_link in link.links %}
                   <li>
                     <a
                       href="{{ child_link.url }}"
-                      class="block px-4 py-2 no-underline hover:underline hover:underline-offset-4 text-inherit"
+                      class="block px-4 py-2 no-underline hover:bg-gray-50 font-['Cabin'] font-medium text-[14px] text-[#025A60]"
                     >
                       {{ child_link.title }}
                     </a>
@@ -66,12 +72,18 @@
   <!-- Part 3: Icons (Search, Account, Cart) -->
   <div class="flex flex-1 items-center justify-end gap-4">
     <a href="{{ routes.search_url }}" class="p-2 text-inherit" aria-label="Search">
-      {% render 'icon-search', class_name: 'w-5 h-5' %}
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11.5" cy="11.5" r="8.5" stroke="#025A60" stroke-width="1.5"/>
+        <path d="M21 21L18 18" stroke="#025A60" stroke-width="1.5" stroke-linecap="square"/>
+      </svg>
     </a>
 
     {% if shop.customer_accounts_enabled %}
       <a href="{{ routes.account_url }}" class="p-2 text-inherit" aria-label="Account">
-        {% render 'icon-account', class_name: 'w-5 h-5' %}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="7" r="3" stroke="#025A60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 13C8.13401 13 5 16.134 5 20H19C19 16.134 15.866 13 12 13Z" stroke="#025A60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </a>
     {% endif %}
 

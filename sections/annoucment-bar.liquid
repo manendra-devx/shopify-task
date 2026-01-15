@@ -1,5 +1,5 @@
 <div
-  class="announcement-bar w-full max-w-[1440px] mx-auto h-[25px] overflow-hidden px-[69px] py-[5px] gap-[9px] opacity-100 font-medium text-center flex items-center justify-center relative box-border"
+  class="announcement-bar w-full h-[25px] overflow-hidden px-[69px] py-[5px] gap-[9px] opacity-100 font-medium text-center flex items-center justify-center relative box-border"
   style="
     background: {{ section.settings.bg_color }};
     color: {{ section.settings.text_color }};
@@ -9,7 +9,7 @@
   <div class="announcement-track flex w-full transition-transform duration-[600ms] ease-[ease]">
     {% for block in section.blocks %}
       {% if block.settings.enable %}
-        <div class="announcement-item w-full min-w-full h-[15px] opacity-100 transform rotate-0 flex items-center justify-center font-['Cabin'] font-normal italic-0 text-[12px] leading-[100%] tracking-[0%] text-center shrink-0 px-4">
+        <div class="announcement-item w-full h-[15px] min-w-full opacity-100 transform rotate-0 flex items-center justify-center font-medium text-[12px] font-['Cabin'] shrink-0 px-4 text-center">
           {% if block.settings.link != blank %}
             <a href="{{ block.settings.link }}" class="text-inherit no-underline block w-full">
               {{ block.settings.text }}
