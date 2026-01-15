@@ -21,18 +21,28 @@
             </div>
           {% endfor %}
         </div>
+
+        <!-- Arrows inside Main Stage -->
+        <button
+          id="PrevButton"
+          class="absolute top-1/2 left-4 -translate-y-1/2 z-10 w-[24px] h-[24px] rounded-full bg-[#E52888] border-[0.5px] border-[#D4E391] shadow-[0.5px_0.5px_0px_#D4E391] flex items-center justify-center flex-shrink-0 transition-transform hover:scale-105"
+        >
+          <svg class="w-[6px] h-[11px] rotate-180" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1.06067 1.06067L5.06067 5.06067L1.06067 9.06067" stroke="#D4E391" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button
+          id="NextButton"
+          class="absolute top-1/2 right-4 -translate-y-1/2 z-10 w-[24px] h-[24px] rounded-full bg-[#E52888] border-[0.5px] border-[#D4E391] shadow-[0.5px_0.5px_0px_#D4E391] flex items-center justify-center flex-shrink-0 transition-transform hover:scale-105"
+        >
+          <svg class="w-[6px] h-[11px]" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1.06067 1.06067L5.06067 5.06067L1.06067 9.06067" stroke="#D4E391" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Thumbnails (Embla) -->
       <div class="flex items-center gap-4 mt-2">
-        <!-- Prev Button -->
-        <button
-          id="PrevButton"
-          class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 flex-shrink-0"
-        >
-          {% render 'icon-chevron-left', class_name: 'w-4 h-4 text-gray-600' %}
-        </button>
-
         <div class="embla embla--thumb overflow-hidden flex-1" id="ThumbCarousel">
           <div class="embla__container flex gap-4 pr-4">
             {% for media in product.media %}
@@ -51,14 +61,6 @@
             {% endfor %}
           </div>
         </div>
-
-        <!-- Next Button -->
-        <button
-          id="NextButton"
-          class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 flex-shrink-0"
-        >
-          {% render 'icon-chevron-right', class_name: 'w-4 h-4 text-gray-600' %}
-        </button>
       </div>
     </div>
 
@@ -152,7 +154,7 @@
 
         <!-- Variant Picker: Size -->
         <div class="flex flex-col gap-3 w-full lg:max-w-[626px]">
-          <span class="text-sm font-bold uppercase tracking-wide text-gray-500 decoration-solid">Select Size</span>
+          <span class="text-sm uppercase tracking-wide text-gray-500 decoration-solid">Select Size</span>
           <div class="flex flex-wrap gap-3">
             <!-- Dynamic Discount Calculation -->
             {% for variant in product.variants %}
