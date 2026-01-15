@@ -1,17 +1,4 @@
-<style>
-  @keyframes marquee-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-
-  .animate-marquee {
-    animation: marquee-scroll linear infinite;
-  }
-</style>
+{{ 'marquee.css' | asset_url | stylesheet_tag }}
 
 {% assign text_blocks = section.blocks | where: 'type', 'text' %}
 {% assign image_blocks = section.blocks | where: 'type', 'image' %}

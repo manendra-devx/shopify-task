@@ -1,5 +1,6 @@
 {% assign config = product.metafields.custom.video_highlight.value %}
 {% if config != blank %}
+  {{ 'video-marquee.css' | asset_url | stylesheet_tag }}
   <div
     class="w-full relative overflow-hidden"
     style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
@@ -125,26 +126,6 @@
     </div>
   </div>
 {% endif %}
-
-<style>
-  @keyframes video-marquee-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-
-  .animate-video-marquee {
-    animation: video-marquee-scroll linear infinite;
-  }
-
-  /* Pause animation on hover of the container */
-  .video-marquee-wrapper:hover .animate-video-marquee {
-    animation-play-state: paused;
-  }
-</style>
 
 {% schema %}
 {
