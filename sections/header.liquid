@@ -1,6 +1,6 @@
 <header class="relative flex items-center justify-between px-4 md:px-8 max-w-[1440px] w-full h-[100px] opacity-100 mx-auto z-40 bg-[#F9F3F1] border-[0.5px] border-[#3A3A3E33] shadow-[0px_4px_10px_0px_#3A3A3E0D]">
-  <!-- Part 1: Logo & Mobile Menu Toggle -->
-  <div class=" items-center justify-start gap-4">
+  <!-- Part 1: Mobile Menu Toggle (Left) -->
+  <div class="flex items-center justify-start gap-4">
     <button
       type="button"
       class="block md:hidden bg-transparent border-none cursor-pointer p-2"
@@ -8,10 +8,20 @@
       aria-expanded="false"
       data-menu-toggle
     >
-      {% render 'icon-hamburger' %}
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="17" cy="17" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="17" cy="7" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="7" cy="7" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="7" cy="17" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
 
-    <a href="{{ routes.root_url }}" class="block" aria-label="Willie">
+    <!-- Logo (Centered on Mobile, Left on Desktop) -->
+    <a
+      href="{{ routes.root_url }}"
+      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 block"
+      aria-label="Willie"
+    >
       {% if settings.logo != blank %}
         {{
           settings.logo
@@ -71,7 +81,7 @@
 
   <!-- Part 3: Icons (Search, Account, Cart) -->
   <div class="flex flex-1 items-center justify-end gap-4">
-    <a href="{{ routes.search_url }}" class="p-2 text-inherit" aria-label="Search">
+    <a href="{{ routes.search_url }}" class="hidden md:inline-block p-2 text-inherit" aria-label="Search">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="11.5" cy="11.5" r="8.5" stroke="#025A60" stroke-width="1.5"/>
         <path d="M21 21L18 18" stroke="#025A60" stroke-width="1.5" stroke-linecap="square"/>
@@ -79,7 +89,7 @@
     </a>
 
     {% if shop.customer_accounts_enabled %}
-      <a href="{{ routes.account_url }}" class="p-2 text-inherit" aria-label="Account">
+      <a href="{{ routes.account_url }}" class="hidden md:inline-block p-2 text-inherit" aria-label="Account">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="7" r="3" stroke="#025A60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M12 13C8.13401 13 5 16.134 5 20H19C19 16.134 15.866 13 12 13Z" stroke="#025A60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
