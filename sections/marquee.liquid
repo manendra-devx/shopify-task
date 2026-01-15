@@ -1,0 +1,152 @@
+<style>
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee-scroll linear infinite;
+  }
+</style>
+
+{% assign text_blocks = section.blocks | where: 'type', 'text' %}
+{% assign image_blocks = section.blocks | where: 'type', 'image' %}
+
+<div
+  class="marquee-container w-full h-[40px] px-4 overflow-hidden flex items-center"
+  style="background-color: {{ section.settings.bg_color }};"
+>
+  <!-- Container 1 -->
+  <div
+    class="flex animate-marquee min-w-full flex-shrink-0 items-center gap-[19px] pr-[19px]"
+    style="animation-duration: {{ section.settings.speed }}s;"
+  >
+    {% if text_blocks.size > 0 %}
+      {% for i in (1..15) %}
+        {% for block in text_blocks %}
+          <!-- Image Item (Alternating Logic) -->
+          {% if image_blocks.size > 0 %}
+            {% assign img_index = forloop.index0 | modulo: image_blocks.size %}
+            {% assign image_item = image_blocks[img_index] %}
+
+            {% if image_item.settings.image != blank %}
+              {{
+                image_item.settings.image
+                | image_url: width: 40
+                | image_tag: class: 'w-auto h-[19px] object-contain', loading: 'eager'
+              }}
+            {% endif %}
+          {% endif %}
+
+          <!-- Text Item -->
+          <span
+            class="font-['Cabin'] font-normal text-[16px] leading-[100%] tracking-[0%]"
+            style="color: {{ section.settings.text_color }};"
+          >
+            {{ block.settings.text }}
+          </span>
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Container 2 (Duplicate for smooth loop) -->
+  <div
+    class="flex animate-marquee min-w-full flex-shrink-0 items-center gap-[19px] pr-[19px]"
+    style="animation-duration: {{ section.settings.speed }}s;"
+  >
+    {% if text_blocks.size > 0 %}
+      {% for i in (1..15) %}
+        {% for block in text_blocks %}
+          <!-- Image Item (Alternating Logic) -->
+          {% if image_blocks.size > 0 %}
+            {% assign img_index = forloop.index0 | modulo: image_blocks.size %}
+            {% assign image_item = image_blocks[img_index] %}
+
+            {% if image_item.settings.image != blank %}
+              {{
+                image_item.settings.image
+                | image_url: width: 40
+                | image_tag: class: 'w-auto h-[19px] object-contain', loading: 'eager'
+              }}
+            {% endif %}
+          {% endif %}
+
+          <!-- Text Item -->
+          <span
+            class="font-['Cabin'] font-normal text-[16px] leading-[100%] tracking-[0%]"
+            style="color: {{ section.settings.text_color }};"
+          >
+            {{ block.settings.text }}
+          </span>
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee",
+  "tag": "section",
+  "class": "section-marquee",
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "unit": "s",
+      "label": "Animation Speed",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#E52888"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#F9F3F1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Vet Approved"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee"
+    }
+  ]
+}
+{% endschema %}
