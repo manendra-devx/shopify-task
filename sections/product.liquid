@@ -78,7 +78,7 @@
           <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
             <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
           </svg>
-          <span class="text-[#025A60] font-normal text-[16px] leading-[100%] tracking-[0px] font-['Cabin'] text-center align-middle ml-1"
+          <span class="text-primary font-normal text-[16px] leading-[100%] tracking-[0px] font-body text-center align-middle ml-1"
             >4.4 (1,900+ Reviews)</span
           >
         </div>
@@ -87,21 +87,21 @@
       <!-- Title & Price Group -->
       <div class="flex flex-col gap-2 mb-2">
         <!-- Title -->
-        <h1 class="w-full lg:w-[409px] h-auto mt-1 text-[28px] lg:text-[36px] font-normal text-[#3A3A3E] font-['Harond'] leading-[110%] tracking-[0%] align-middle">
+        <h1 class="w-full lg:w-[409px] h-auto mt-1 text-[28px] lg:text-[36px] font-normal text-text font-heading leading-[110%] tracking-[0%] align-middle">
           {{ product.title }}
         </h1>
         <!-- Price -->
         <div class="flex flex-col w-full lg:w-[201px] gap-[6px]">
           <div class="flex items-baseline gap-2 whitespace-nowrap">
             <span
-              class="text-[22px] font-semibold text-[#3A3A3E] font-['Cabin'] leading-[100%] tracking-[0%] text-center align-middle"
+              class="text-[22px] font-semibold text-text font-body leading-[100%] tracking-[0%] text-center align-middle"
               id="ProductPrice"
             >
               {{ product.selected_or_first_available_variant.price | money }}
             </span>
             <span
               id="ComparePrice"
-              class="text-[14px] font-normal text-[#3A3A3E] font-['Cabin'] leading-[100%] tracking-[0%] text-center align-middle line-through {% unless product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}hidden{% endunless %}"
+              class="text-[14px] font-normal text-text font-body leading-[100%] tracking-[0%] text-center align-middle line-through {% unless product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}hidden{% endunless %}"
             >
               {{ product.selected_or_first_available_variant.compare_at_price | money }}
             </span>
@@ -115,7 +115,7 @@
       <!-- Highlights Box -->
       {% assign highlight = product.metafields.custom.highlight.value %}
       {% if highlight != blank %}
-        <div class="flex items-center gap-[10px] w-full lg:w-[409px] h-auto lg:h-[55px] pt-[8.5px] pr-[10px] pb-[8.5px] pl-[10px] border-[0.4px] border-[#E52888] rounded-[6px] bg-[#FDF2F4]">
+        <div class="flex items-center gap-[10px] w-full lg:w-[409px] h-auto lg:h-[55px] pt-[8.5px] pr-[10px] pb-[8.5px] pl-[10px] border-[0.4px] border-secondary rounded-[6px] bg-secondary-light">
           <div class="w-[30px] h-[30px] bg-[#D94378] rounded-full flex items-center justify-center flex-shrink-0 text-white overflow-hidden">
             {% if highlight.icon != blank %}
               {{
@@ -126,10 +126,10 @@
             {% endif %}
           </div>
           <div>
-            <h3 class="flex-1 lg:w-[289px] h-auto font-bold text-[#3A3A3E] text-[16px] font-['Cabin'] leading-[100%] tracking-[0%] align-middle">
+            <h3 class="flex-1 lg:w-[289px] h-auto font-bold text-text text-[16px] font-body leading-[100%] tracking-[0%] align-middle">
               {{ highlight.title }}
             </h3>
-            <p class="flex-1 lg:w-[289px] h-auto text-[12px] font-normal text-[#3A3A3E] font-['Cabin'] leading-[100%] tracking-[0%] align-middle">
+            <p class="flex-1 lg:w-[289px] h-auto text-[12px] font-normal text-text font-body leading-[100%] tracking-[0%] align-middle">
               {{ highlight.description }}
               {% if highlight.link != blank %}
                 <a
@@ -190,11 +190,11 @@
                 <button
                   type="button"
                   class="
-                    relative variant-btn px-[19px] py-[8px] rounded-[28px] text-[16px] leading-[24px] font-bold font-['Cabin'] transition-all border
+                    relative variant-btn px-[19px] py-[8px] rounded-[28px] text-[16px] leading-[24px] font-bold font-body transition-all border
                     {% if is_selected %}
-                      bg-[#025A60] text-white border-[#025A60]
+                      bg-primary text-white border-primary
                     {% else %}
-                      bg-[#025A6014] text-[#025A60] border-transparent hover:border-[#025A60]
+                      bg-primary-light text-primary border-transparent hover:border-primary
                     {% endif %}
                   "
                   data-variant-id="{{ variant.id }}"
@@ -220,14 +220,21 @@
         <div class="flex flex-col gap-6 w-full lg:max-w-[500px]">
           <div class="flex gap-6 w-full">
             <!-- Quantity Selector -->
-            <div class="w-[130px] h-[48px] rounded-[8px] border-[0.8px] border-[#025A60] p-[7px] flex items-center justify-between flex-shrink-0">
+            <div class="w-[130px] h-[48px] rounded-[8px] border-[0.8px] border-primary p-[7px] flex items-center justify-between flex-shrink-0">
               <button
                 type="button"
                 onclick="updateQty(-1)"
-                class="w-[34px] h-[34px] bg-[#025A6014] rounded-[6px] flex items-center justify-center flex-shrink-0"
+                class="w-[34px] h-[34px] bg-primary-light rounded-[6px] flex items-center justify-center flex-shrink-0"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.33334 7H11.6667" stroke="#025A60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="text-primary"
+                >
+                  <path d="M2.33334 7H11.6667" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
 
@@ -237,16 +244,23 @@
                 id="Quantity"
                 value="01"
                 min="1"
-                class="w-auto min-w-[30px] flex-1 bg-transparent text-center font-['Cabin'] font-medium text-[18px] text-[#025A60] p-0 border-none focus:ring-0 leading-[100%]"
+                class="w-auto min-w-[30px] flex-1 bg-transparent text-center font-body font-medium text-[18px] text-primary p-0 border-none focus:ring-0 leading-[100%]"
               >
 
               <button
                 type="button"
                 onclick="updateQty(1)"
-                class="w-[34px] h-[34px] bg-[#025A6014] rounded-[6px] flex items-center justify-center flex-shrink-0"
+                class="w-[34px] h-[34px] bg-primary-light rounded-[6px] flex items-center justify-center flex-shrink-0"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 2.33334V11.6667M2.33334 7H11.6667" stroke="#025A60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="text-primary"
+                >
+                  <path d="M7 2.33334V11.6667M2.33334 7H11.6667" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
             </div>
@@ -255,7 +269,7 @@
             <button
               type="submit"
               name="add"
-              class="flex-1 lg:w-[346px] h-[48px] bg-[#025A60] rounded-[8px] flex items-center justify-center gap-2 hover:bg-[#024044] transition-colors"
+              class="flex-1 lg:w-[346px] h-[48px] btn-primary rounded-[8px] flex items-center justify-center gap-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -280,7 +294,7 @@
           <!-- Buy It Now -->
           <button
             type="button"
-            class="w-full h-[48px] bg-[#025A60] rounded-[8px] flex items-center justify-center gap-[8px] px-[10px] py-[12px] font-['Cabin'] font-medium text-[16px] text-[#F9F3F1] leading-[100%] uppercase transition-all hover:bg-[#024a4f]"
+            class="w-full h-[48px] btn-primary rounded-[8px] flex items-center justify-center gap-[8px] px-[10px] py-[12px] font-body font-medium text-[16px] text-[#F9F3F1] leading-[100%] uppercase transition-all"
           >
             Buy It Now
           </button>
@@ -292,15 +306,15 @@
         <div class="flex flex-wrap gap-3 mt-4" id="CouponContainer">
           {% for coupon in product.metafields.custom.coupons.value %}
             <div
-              class="relative flex items-center justify-between w-[264px] h-[56px] bg-[#025A6014] border-[0.5px] border-dashed border-[#025A60CC] rounded-lg px-3 transition-all hover:bg-[#E6F4EA]"
+              class="relative flex items-center justify-between w-[264px] h-[56px] bg-primary-light border-[0.5px] border-dashed border-primary rounded-lg px-3 transition-all hover:bg-[#E6F4EA]"
             >
               <!-- Left Notch -->
               <span
-                class="absolute -left-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-white rounded-full border-r-[0.5px] border-dashed border-[#025A60CC] z-10"
+                class="absolute -left-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-[#F9F3F1] rounded-full border-r-[0.5px] border-dashed border-primary z-10"
               ></span>
               <!-- Right Notch -->
               <span
-                class="absolute -right-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-white rounded-full border-l-[0.5px] border-dashed border-[#025A60CC] z-10"
+                class="absolute -right-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-[#F9F3F1] rounded-full border-l-[0.5px] border-dashed border-primary z-10"
               ></span>
 
               <!-- Left Icon -->
@@ -314,12 +328,12 @@
               <!-- Center Text -->
               <div class="flex-1 flex flex-col items-start justify-center ml-3">
                 <p
-                  class="text-[#025A60] font-['Cafeteria'] font-bold text-[18px] leading-none coupon-price-text"
+                  class="text-primary font-accent font-bold text-[18px] leading-none coupon-price-text"
                   data-discount="{{ coupon.discount_percentage }}"
                 >
                   Get it for <span class="dynamic-price">...</span>
                 </p>
-                <p class="text-[#025A60] font-['Cabin'] font-normal text-[12px] leading-none mt-[2px]">
+                <p class="text-primary font-body font-normal text-[12px] leading-none mt-[2px]">
                   {{ coupon.description }}
                 </p>
               </div>

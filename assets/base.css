@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
 }
+
 .product {
   background-color: #F9F3F1;
 }
@@ -20,6 +21,107 @@ body {
 :root {
   --font-weight: 400;
 
+  /* Colors */
+  --color-primary: #025a60;
+  --color-primary-light: rgba(2, 90, 96, 0.08);
+  /* 025A60 with opacity */
+  --color-secondary: #e52888;
+  --color-secondary-light: #fef2f2;
+  --color-text: #3a3a3e;
+  --color-accent: #d4e391;
+  --color-border: rgba(58, 58, 62, 0.2);
+
+  /* Fonts */
+  --font-heading: 'Harond', serif;
+  --font-body: 'Cabin', sans-serif;
+  --font-accent: 'Cafeteria', sans-serif;
+}
+
+/* Component Classes */
+
+/* Typography */
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-accent {
+  font-family: var(--font-accent);
+}
+
+/* Colors - Text */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.text-text {
+  color: var(--color-text);
+}
+
+/* Colors - Background */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-secondary-light {
+  background-color: var(--color-secondary-light);
+}
+
+.bg-primary-light {
+  background-color: var(--color-primary-light);
+}
+
+/* Borders */
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+.border-secondary {
+  border-color: var(--color-secondary);
+}
+
+.border-text {
+  border-color: var(--color-text);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 9999px;
+  /* rounded-full */
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #02484d;
+  /* Darker shade of primary */
+  transform: scale(1.02);
+}
+
+/* Badges */
+.badge-pink {
+  background-color: var(--color-secondary-light);
+  color: var(--color-secondary);
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 0.375rem;
+  /* rounded-md */
 }
 
 img,

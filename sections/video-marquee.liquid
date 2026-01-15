@@ -5,16 +5,18 @@
     class="w-full relative overflow-hidden"
     style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
   >
-    {% if config.title.value != blank %}
-      <h2 class="font-['Cabin'] font-bold text-[32px] md:text-[40px] text-[#333333] text-center mb-[24px]">
-        {{ config.title.value }}
-      </h2>
-    {% endif %}
-    {% if config.description.value != blank %}
-      <div class="font-['Cabin'] text-[16px] text-[#333333] text-center mb-[48px] px-4 max-w-[800px] mx-auto">
-        {{ config.description.value | newline_to_br }}
-      </div>
-    {% endif %}
+    <div class="w-full max-w-[1280px] mx-auto flex flex-col items-center gap-[8px] mb-[8px] px-4">
+      {% if config.title.value != blank %}
+        <h2 class="font-body font-bold text-[32px] md:text-[40px] text-text text-center leading-none m-0">
+          {{ config.title.value }}
+        </h2>
+      {% endif %}
+      {% if config.description.value != blank %}
+        <div class="font-body text-[16px] text-text text-center leading-normal m-0 max-w-[800px]">
+          {{ config.description.value | newline_to_br }}
+        </div>
+      {% endif %}
+    </div>
 
     <!--
       Marquee Wrapper

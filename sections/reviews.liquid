@@ -7,7 +7,7 @@
     <div class="max-w-[1280px] mx-auto px-4 md:px-0">
       <!-- Section Title -->
       {% if section.settings.title != blank %}
-        <h2 class="font-['Cabin'] font-bold text-[32px] md:text-[40px] text-[#333333] text-center mb-[48px]">
+        <h2 class="font-body font-bold text-[32px] md:text-[40px] text-text text-center mb-[48px]">
           {{ section.settings.title }}
         </h2>
       {% endif %}
@@ -43,7 +43,7 @@
                   <foreignObject x="-10" y="-10" width="44" height="42">
                     <div class="w-full h-full backdrop-blur-[5px]" xmlns="http://www.w3.org/1999/xhtml" style="clip-path:url(#bgblur_0_0_1372_clip_path_{{ review.system.id }});"></div>
                   </foreignObject>
-                  <path data-figma-bg-blur-radius="10" d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z" fill="#E52888" fill-opacity="0.2"/>
+                  <path data-figma-bg-blur-radius="10" d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z" class="text-secondary" fill="currentColor" fill-opacity="0.2"/>
                   <defs>
                     <clipPath id="bgblur_0_0_1372_clip_path_{{ review.system.id }}" transform="translate(10 10)">
                       <path d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z"/>
@@ -109,7 +109,7 @@
 
               <!-- Review Text -->
               <div class="flex-1">
-                <p class="font-['Cabin'] text-[14px] leading-[140%] text-[#3A3A3E]">
+                <p class="font-body text-[14px] leading-[140%] text-text">
                   {{ review.review_text.value | newline_to_br }}
                 </p>
               </div>
@@ -127,7 +127,7 @@
                     {% render 'icon-account', class_name: 'w-full h-full text-gray-400 p-0.5' %}
                   {% endif %}
                 </div>
-                <span class="font-['Cabin'] font-bold text-[14px] text-[#333333]">
+                <span class="font-body font-bold text-[14px] text-text">
                   {{ review.reviewer_name.value }}
                 </span>
               </div>

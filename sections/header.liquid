@@ -1,4 +1,4 @@
-<header class="relative flex items-center justify-between px-4 md:px-8 w-full h-[100px] opacity-100 mx-auto z-40 bg-[#F9F3F1] border-[0.5px] border-[#3A3A3E33] shadow-[0px_4px_10px_0px_#3A3A3E0D]">
+<header class="relative flex items-center justify-between px-4 md:px-[80px] w-full h-[100px] opacity-100 mx-auto z-40 bg-[#F9F3F1] border-[0.5px] border-[#3A3A3E33] shadow-[0px_4px_10px_0px_#3A3A3E0D]">
   <!-- Part 1: Mobile Menu Toggle (Left) -->
   <div class="flex items-center justify-start gap-4">
     <button
@@ -44,16 +44,16 @@
         <li class="relative">
           <div class="group">
             {% if link.links.size > 0 %}
-              <span class="flex items-center gap-1 cursor-pointer font-['Cabin'] font-medium text-[16px] text-[#025A60] leading-[100%] hover:opacity-80 text-center justify-center">
+              <span class="flex items-center gap-1 cursor-pointer font-body font-medium text-[16px] text-primary leading-[100%] hover:opacity-80 text-center justify-center">
                 {{ link.title }}
                 {% render 'icon-chevron-down',
-                  class_name: 'w-4 h-4 transition-transform duration-200 group-hover:rotate-180 text-[#025A60]'
+                  class_name: 'w-4 h-4 transition-transform duration-200 group-hover:rotate-180 text-primary'
                 %}
               </span>
             {% else %}
               <a
                 href="{{ link.url }}"
-                class="no-underline font-['Cabin'] font-medium text-[16px] text-[#025A60] leading-[100%] hover:opacity-80 text-center block w-full"
+                class="no-underline font-body font-medium text-[16px] text-primary leading-[100%] hover:opacity-80 text-center block w-full"
               >
                 {{ link.title }}
               </a>
@@ -65,7 +65,7 @@
                   <li>
                     <a
                       href="{{ child_link.url }}"
-                      class="block px-4 py-2 no-underline hover:bg-gray-50 font-['Cabin'] font-medium text-[14px] text-[#025A60]"
+                      class="block px-4 py-2 no-underline hover:bg-gray-50 font-body font-medium text-[14px] text-primary"
                     >
                       {{ child_link.title }}
                     </a>
