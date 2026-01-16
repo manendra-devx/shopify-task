@@ -7,7 +7,10 @@
   endunless
 %}
 
-<div class="cart-item flex gap-4 pb-4 border-b">
+<div class="cart-item relative flex gap-4 pb-4 border-b">
+  <div class="cart-item-loader absolute inset-0 bg-white/60 z-10 hidden items-center justify-center transition-opacity duration-200">
+    <div class="w-6 h-6 border-2 border-gray-200 border-t-black rounded-full animate-spin"></div>
+  </div>
   {% if item.image %}
     <a href="{{ item.url }}" class="flex-shrink-0">
       <img

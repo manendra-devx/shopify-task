@@ -182,13 +182,24 @@ class CartDrawer {
     async updateQuantity(line, quantity, triggerBtn) {
         // Find the specific item container to show loader
         let lineItemContainer;
+        let loader;
+
         if (triggerBtn) {
             lineItemContainer = triggerBtn.closest('.cart-item') || triggerBtn.closest('[data-line-item]');
+            if (lineItemContainer) {
+                loader = lineItemContainer.querySelector('.cart-item-loader');
+            }
         }
 
         if (lineItemContainer) {
             lineItemContainer.style.pointerEvents = 'none';
-            lineItemContainer.classList.add('animate-pulse');
+            if (loader) {
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+            } else {
+                // Fallback if loader not found
+                lineItemContainer.classList.add('animate-pulse');
+            }
         }
 
         try {
@@ -212,11 +223,16 @@ class CartDrawer {
         } catch (error) {
             console.error('Error:', error);
         } finally {
-            // Opacity will be reset when refreshCart overwrites the HTML, 
-            // but if error occurs and no refresh, we should reset.
+            // If the element still exists (no refresh occurred or partial update), reset state
             if (lineItemContainer && document.body.contains(lineItemContainer)) {
-                lineItemContainer.style.opacity = '1';
                 lineItemContainer.style.pointerEvents = 'auto';
+                if (loader) {
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                } else {
+                    lineItemContainer.classList.remove('animate-pulse');
+                    lineItemContainer.style.opacity = '1';
+                }
             }
         }
     }
