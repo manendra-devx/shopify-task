@@ -108,13 +108,13 @@ function selectVariant(btn) {
 
     // Update Toggle State
     document.querySelectorAll('.variant-btn').forEach((b) => {
-        // Reset to default state
-        b.classList.remove('bg-[#025A60]', 'text-white', 'border-[#025A60]');
-        b.classList.add('bg-[#025A6014]', 'text-[#025A60]', 'border-transparent');
+        // Reset to default state (Inactive)
+        b.classList.remove('bg-primary', 'text-white', 'border-primary');
+        b.classList.add('bg-primary-light', 'text-primary', 'border-transparent', 'hover:border-primary');
     });
-    // Set active state
-    btn.classList.remove('bg-[#025A6014]', 'text-[#025A60]', 'border-transparent');
-    btn.classList.add('bg-[#025A60]', 'text-white', 'border-[#025A60]');
+    // Set active state (Active)
+    btn.classList.remove('bg-primary-light', 'text-primary', 'border-transparent', 'hover:border-primary');
+    btn.classList.add('bg-primary', 'text-white', 'border-primary');
 }
 
 // Embla Carousel Integration
