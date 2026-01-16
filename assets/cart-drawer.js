@@ -26,6 +26,27 @@ class CartDrawer {
     init() {
         this.bindEvents();
         this.bindCartEvents(); // Bind events inside the drawer (delegation)
+        this.bindCheckoutEvents();
+    }
+
+    bindCheckoutEvents() {
+        // Since checkout button might be re-rendered, we should delegate or re-bind
+        // But for forms in snippets, delegation is safer if drawer content refreshes
+        // Hmmm the drawer innerHTML is replaced in refreshCart. 
+        // So we should bind in init (delegation) OR call this in refreshCart.
+        // Let's use delegation on the drawer container.
+
+        if (this.drawer) {
+            this.drawer.addEventListener('click', (e) => {
+                const checkoutBtn = e.target.closest('[name="checkout"]');
+                if (checkoutBtn) {
+                    // Loading state
+                    checkoutBtn.innerHTML = 'Processing<span class="loading-dots"></span>';
+                    checkoutBtn.classList.add('btn-loading');
+                    // Form submits naturally
+                }
+            });
+        }
     }
 
     bindEvents() {
@@ -57,10 +78,7 @@ class CartDrawer {
             if (form) {
                 e.preventDefault();
                 const submitBtn = form.querySelector('[type="submit"]');
-                if (submitBtn) {
-                    submitBtn.classList.add('loading');
-                    submitBtn.disabled = true;
-                }
+                // ... (loader logic handled in addToCart)
 
                 const formData = new FormData(form);
                 this.addToCart(formData, submitBtn);
@@ -81,21 +99,40 @@ class CartDrawer {
                 e.preventDefault();
                 const line = btn.closest('[data-line]').dataset.line;
                 const quantity = btn.dataset.quantity;
-                this.updateQuantity(line, quantity);
+                this.updateQuantity(line, quantity, btn);
             }
         });
     }
+
+
 
     open() {
         if (this.drawer && this.overlay) {
             this.drawer.classList.remove('translate-x-full');
             this.overlay.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            // Ensure checkout button is reset when drawer opens
+            this.resetCheckoutButton();
+        }
+    }
+
+    // Reset checkout button to default state
+    resetCheckoutButton() {
+        const drawer = this.drawer;
+        if (!drawer) return;
+        const checkoutBtn = drawer.querySelector('button[name="checkout"]');
+        if (checkoutBtn) {
+            checkoutBtn.innerHTML = 'Checkout';
+            checkoutBtn.classList.remove('btn-loading');
+            checkoutBtn.disabled = false;
+            delete checkoutBtn.dataset.original;
         }
     }
 
     close() {
         if (this.drawer && this.overlay) {
+            // Reset checkout button state before closing
+            this.resetCheckoutButton();
             this.drawer.classList.add('translate-x-full');
             this.overlay.classList.add('hidden');
             document.body.style.overflow = '';
@@ -103,6 +140,17 @@ class CartDrawer {
     }
 
     async addToCart(formData, submitBtn) {
+        let originalContent = '';
+        if (submitBtn) {
+            originalContent = submitBtn.innerHTML;
+            // Set Loading State: Adding... + Spinner
+            submitBtn.innerHTML = `
+                <span class="loader w-4 h-4 mr-2"></span>
+                <span class="font-['Cabin'] font-medium text-[16px] text-[#F9F3F1] uppercase leading-none mt-[2px]">Adding...</span>
+            `;
+            submitBtn.classList.add('btn-loading');
+        }
+
         try {
             const response = await fetch(this.routes.root + 'cart/add.js', {
                 method: 'POST',
@@ -122,15 +170,28 @@ class CartDrawer {
             console.error('Error:', error);
         } finally {
             if (submitBtn) {
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
+                // Restore original state logic handled here or keep "Added" state briefly?
+                // For now, restoring immediately after action completes allows subsequent adds.
+                submitBtn.innerHTML = originalContent;
+                submitBtn.classList.remove('btn-loading');
+                submitBtn.disabled = false; // logic handled in bindEvents originally, ensuring re-enable here too
             }
         }
     }
 
-    async updateQuantity(line, quantity) {
+    async updateQuantity(line, quantity, triggerBtn) {
+        // Find the specific item container to show loader
+        let lineItemContainer;
+        if (triggerBtn) {
+            lineItemContainer = triggerBtn.closest('.cart-item') || triggerBtn.closest('[data-line-item]');
+        }
+
+        if (lineItemContainer) {
+            lineItemContainer.style.pointerEvents = 'none';
+            lineItemContainer.classList.add('animate-pulse');
+        }
+
         try {
-            // Show loading state if needed
             const response = await fetch(this.routes.root + 'cart/change.js', {
                 method: 'POST',
                 headers: {
@@ -150,6 +211,13 @@ class CartDrawer {
             }
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            // Opacity will be reset when refreshCart overwrites the HTML, 
+            // but if error occurs and no refresh, we should reset.
+            if (lineItemContainer && document.body.contains(lineItemContainer)) {
+                lineItemContainer.style.opacity = '1';
+                lineItemContainer.style.pointerEvents = 'auto';
+            }
         }
     }
 
@@ -201,4 +269,17 @@ class CartDrawer {
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
     window.cartDrawer = new CartDrawer();
+});
+
+// Reset checkout button state on page show (e.g., when navigating back)
+window.addEventListener('pageshow', (event) => {
+    const drawer = document.querySelector('[data-cart-drawer]');
+    if (!drawer) return;
+    const checkoutBtn = drawer.querySelector('button[name="checkout"]');
+    if (checkoutBtn) {
+        // Reset to default markup
+        checkoutBtn.innerHTML = 'Checkout';
+        checkoutBtn.classList.remove('btn-loading');
+        delete checkoutBtn.dataset.original;
+    }
 });
