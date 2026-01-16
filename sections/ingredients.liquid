@@ -1,0 +1,107 @@
+{% assign ingredients = product.metafields.custom.ingredients.value %}
+{% if ingredients != blank %}
+  <section class="w-full py-12">
+    <div class="max-w-[1280px] mx-auto px-4 md:px-0 flex flex-col items-center">
+      <!-- Section Title -->
+      <h2 class="w-full text-center font-['Cabin'] font-bold text-[36px] leading-[100%] text-[#3A3A3E] mb-[48px]">
+        {{ section.settings.title | default: 'Key Ingredients' }}
+      </h2>
+
+      <!-- Ingredients Grid -->
+      <div class="flex flex-wrap justify-center items-start gap-[20px]">
+        {% for item in ingredients %}
+          <div class="relative w-[305px] min-h-[400px] h-auto bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden group flex flex-col">
+            <!-- Image Area (Fixed Height 247px) -->
+            <div class="w-full h-[247px] flex-shrink-0 overflow-hidden">
+              {% if item.image != blank %}
+                {{
+                  item.image
+                  | image_url: width: 600
+                  | image_tag:
+                    class: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105',
+                    loading: 'lazy'
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100 text-gray-400' }}
+              {% endif %}
+            </div>
+
+            <!-- Content Area (Flex-1 for expansion) -->
+            <div
+              class="flex-1 flex flex-col px-[16px] pt-[16px] pb-[16px]"
+            >
+              <!-- Card Title -->
+              <h3 class="font-['Cabin'] font-bold text-[22px] leading-[100%] text-[#3A3A3E] mb-[4px]">
+                {{ item.title }}
+              </h3>
+
+              <!-- Card Description with Read More -->
+              <div class="description-container relative font-['Cabin'] font-normal text-[14px] leading-[150%] text-[#3A3A3E]">
+                <div class="description-content line-clamp-2" id="desc-{{ forloop.index }}">
+                  {{ item.description }}
+                </div>
+                <button
+                  onclick="toggleDescription('desc-{{ forloop.index }}', this)"
+                  class="font-['Cabin'] font-bold text-[14px] leading-[150%] text-[#3A3A3E] mt-0.5 hover:underline"
+                >
+                  Read more
+                </button>
+              </div>
+
+              <!-- Tags (Pushed to bottom) -->
+              {% if item.tags != blank %}
+                <div class="mt-auto flex flex-wrap gap-[10px] pt-4">
+                  {% for tag in item.tags.value %}
+                    <span
+                      class="flex items-center justify-center px-[10px] py-[4px] h-[25px] rounded-[40px] border-[0.5px] border-[#025A6033] font-['Cabin'] uppercase font-normal text-[14px] leading-[100%] text-[#025A60]"
+                      style="background-color: #025A601A;"
+                    >
+                      {{ tag }}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+<script>
+  function toggleDescription(id, btn) {
+    const content = document.getElementById(id);
+    if (!content) return;
+
+    // Toggle line clamp
+    if (content.classList.contains('line-clamp-2')) {
+      content.classList.remove('line-clamp-2');
+      btn.textContent = 'Read less';
+    } else {
+      content.classList.add('line-clamp-2');
+      btn.textContent = 'Read more';
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Ingredients",
+  "tag": "section",
+  "class": "section-ingredients",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Ingredients"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingredients"
+    }
+  ]
+}
+{% endschema %}
