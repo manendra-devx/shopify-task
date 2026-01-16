@@ -16,7 +16,32 @@
       "settings": {
         "menu": "main-menu"
       }
+    },
+    "annoucment_bar_QzmkAC": {
+      "type": "annoucment-bar",
+      "blocks": {
+        "announcement_pzR4r7": {
+          "type": "announcement",
+          "settings": {
+            "enable": true,
+            "text": "15% Off over ₹5000 Use Code WELLIEWOW",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_pzR4r7"
+      ],
+      "name": "Announcement Bar",
+      "settings": {
+        "rotation_speed": 4,
+        "bg_color": "#025A60",
+        "text_color": "#F9F3F1"
+      }
     }
   },
-  "order": ["header"]
+  "order": [
+    "header",
+    "annoucment_bar_QzmkAC"
+  ]
 }
