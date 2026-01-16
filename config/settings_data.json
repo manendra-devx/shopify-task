@@ -10,8 +10,14 @@
 {
   "current": {
     "type_primary_font": "karla_n4",
-    "logo": "shopify://shop_images/zahara.webp",
+    "logo": "shopify://shop_images/wellie-logo.png",
     "favicon": "",
+    "sections": {
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {}
+      }
+    },
     "content_for_index": []
   }
 }
