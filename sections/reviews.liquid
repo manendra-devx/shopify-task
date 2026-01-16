@@ -12,131 +12,200 @@
         </h2>
       {% endif %}
 
-      <!-- Reviews Grid -->
-      <div class="flex flex-wrap justify-center gap-2">
-        {% for review in reviews %}
-          <!-- Individual Review Card -->
-          <div
-            class="review-card relative flex flex-col sm:flex-row bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden w-full sm:w-[414px] min-h-[220px] p-[10px]"
-          >
-            <!-- Left Image -->
-            <div class="flex-shrink-0 w-full sm:w-[146px] h-[200px] mb-4 sm:mb-0">
-              {% if review.main_image.value != blank %}
-                {{
-                  review.main_image.value
-                  | image_url: width: 300
-                  | image_tag: class: 'w-full h-full object-cover rounded-[6px]', loading: 'lazy'
-                }}
-              {% else %}
-                {{
-                  'image'
-                  | placeholder_svg_tag: 'w-full h-full object-cover rounded-[6px] bg-gray-100 text-gray-400'
-                }}
-              {% endif %}
-            </div>
-
-            <!-- Right Content Column -->
-            <div class="flex-1 flex flex-col pl-0 sm:pl-[14px]">
-              <!-- Quote Icon SVG -->
-              <div class="mb-2">
-                <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <foreignObject x="-10" y="-10" width="44" height="42">
-                    <div class="w-full h-full backdrop-blur-[5px]" xmlns="http://www.w3.org/1999/xhtml" style="clip-path:url(#bgblur_0_0_1372_clip_path_{{ review.system.id }});"></div>
-                  </foreignObject>
-                  <path data-figma-bg-blur-radius="10" d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z" class="text-secondary" fill="currentColor" fill-opacity="0.2"/>
-                  <defs>
-                    <clipPath id="bgblur_0_0_1372_clip_path_{{ review.system.id }}" transform="translate(10 10)">
-                      <path d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-              </div>
-
-              <!-- Stars -->
-              <div class="flex gap-1 mb-2">
-                {% assign rating_val = review.rating.value | default: 5 %}
-                {% assign full_stars = rating_val | floor %}
-                {% assign remainder = rating_val | minus: full_stars %}
-                {% assign has_half_star = false %}
-                {% if remainder >= 0.4 and remainder <= 0.9 %}
-                  {% assign has_half_star = true %}
-                {% elsif remainder > 0.9 %}
-                  {% assign full_stars = full_stars | plus: 1 %}
-                {% endif %}
-
-                {% for i in (1..full_stars) %}
-                  <!-- Filled Star (Orange) -->
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9900" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#FF9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                {% endfor %}
-
-                {% if has_half_star %}
-                  <!-- Half Star -->
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <linearGradient id="half_star_{{ review.system.id }}">
-                        <stop offset="50%" stop-color="#FF9900" />
-                        <stop offset="50%" stop-color="#E5E7EB" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="url(#half_star_{{ review.system.id }})" stroke-width="0" />
-                    <!-- Outline to match style -->
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="url(#half_star_{{ review.system.id }})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                {% endif %}
-
-                {% assign stars_shown = full_stars %}
-                {% if has_half_star %}{% assign stars_shown = stars_shown | plus: 1 %}{% endif %}
-                {% assign empty_stars = 5 | minus: stars_shown %}
-
-                {% if empty_stars > 0 %}
-                  {% for i in (1..empty_stars) %}
-                    <!-- Empty Star (Gray) -->
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#E5E7EB"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  {% endfor %}
-                {% endif %}
-              </div>
-
-              <!-- Review Text -->
-              <div class="flex-1">
-                <p class="font-body text-[14px] leading-[140%] text-text">
-                  {{ review.review_text.value | newline_to_br }}
-                </p>
-              </div>
-
-              <!-- Reviewer Profile -->
-              <div class="flex items-center gap-2 mt-auto pt-2">
-                <div class="w-[24px] h-[24px] rounded-full overflow-hidden bg-gray-200">
-                  {% if review.reviewer_avatar.value != blank %}
+      <!-- Reviews Grid / Carousel -->
+      <div class="embla w-full overflow-hidden" id="reviews-carousel">
+        <div class="embla__container flex md:flex-wrap md:justify-center md:gap-2">
+          {% for review in reviews %}
+            <!-- Individual Review Card -->
+            <div
+              class="embla__slide flex-[0_0_85%] min-w-0 sm:flex-none pl-4 md:pl-0 first:pl-4 last:pr-4 md:first:pl-0 md:last:pr-0"
+            >
+              <div
+                class="review-card relative flex flex-col sm:flex-row bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden w-full sm:w-[414px] min-h-[220px] h-full"
+              >
+                <!-- Left Image -->
+                <div class="flex-shrink-0 w-full sm:w-[146px] h-[200px] sm:h-auto">
+                  {% if review.main_image.value != blank %}
                     {{
-                      review.reviewer_avatar.value
-                      | image_url: width: 48
-                      | image_tag: class: 'w-full h-full object-cover'
+                      review.main_image.value
+                      | image_url: width: 300
+                      | image_tag: class: 'w-full h-full object-cover', loading: 'lazy'
                     }}
                   {% else %}
-                    {% render 'icon-account', class_name: 'w-full h-full text-gray-400 p-0.5' %}
+                    {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100 text-gray-400' }}
                   {% endif %}
                 </div>
-                <span class="font-body font-bold text-[14px] text-text">
-                  {{ review.reviewer_name.value }}
-                </span>
+
+                <!-- Right Content Column -->
+                <div class="flex-1 flex flex-col p-4">
+                  <!-- Quote Icon SVG -->
+                  <div class="mb-2">
+                    <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <foreignObject x="-10" y="-10" width="44" height="42">
+                        <div class="w-full h-full backdrop-blur-[5px]" xmlns="http://www.w3.org/1999/xhtml" style="clip-path:url(#bgblur_0_0_1372_clip_path_{{ review.system.id }});"></div>
+                      </foreignObject>
+                      <path data-figma-bg-blur-radius="10" d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z" class="text-secondary" fill="currentColor" fill-opacity="0.2"/>
+                      <defs>
+                        <clipPath id="bgblur_0_0_1372_clip_path_{{ review.system.id }}" transform="translate(10 10)">
+                          <path d="M4.63941 0H9.72491L6.51301 10.4991H9.63569V22H0V11.4803L4.63941 0ZM18.9145 0H24L20.7881 10.4991H23.9108V22H14.2751V11.4803L18.9145 0Z"/>
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+
+                  <!-- Stars -->
+                  <div class="flex gap-1 mb-2">
+                    {% assign rating_val = review.rating.value | default: 5 %}
+                    {% assign full_stars = rating_val | floor %}
+                    {% assign remainder = rating_val | minus: full_stars %}
+                    {% assign has_half_star = false %}
+                    {% if remainder >= 0.4 and remainder <= 0.9 %}
+                      {% assign has_half_star = true %}
+                    {% elsif remainder > 0.9 %}
+                      {% assign full_stars = full_stars | plus: 1 %}
+                    {% endif %}
+
+                    {% for i in (1..full_stars) %}
+                      <!-- Filled Star (Orange) -->
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9900" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#FF9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    {% endfor %}
+
+                    {% if has_half_star %}
+                      <!-- Half Star -->
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="half_star_{{ review.system.id }}">
+                            <stop offset="50%" stop-color="#FF9900" />
+                            <stop offset="50%" stop-color="#E5E7EB" />
+                          </linearGradient>
+                        </defs>
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="url(#half_star_{{ review.system.id }})" stroke-width="0" />
+                        <!-- Outline to match style -->
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="url(#half_star_{{ review.system.id }})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    {% endif %}
+
+                    {% assign stars_shown = full_stars %}
+                    {% if has_half_star %}{% assign stars_shown = stars_shown | plus: 1 %}{% endif %}
+                    {% assign empty_stars = 5 | minus: stars_shown %}
+
+                    {% if empty_stars > 0 %}
+                      {% for i in (1..empty_stars) %}
+                        <!-- Empty Star (Gray) -->
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#E5E7EB"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+
+                  <!-- Review Text -->
+                  <div class="flex-1">
+                    <p class="font-body text-[14px] leading-[140%] text-text">
+                      {{ review.review_text.value | newline_to_br }}
+                    </p>
+                  </div>
+
+                  <!-- Reviewer Profile -->
+                  <div class="flex items-center gap-2 mt-auto pt-2">
+                    <div class="w-[24px] h-[24px] rounded-full overflow-hidden bg-gray-200">
+                      {% if review.reviewer_avatar.value != blank %}
+                        {{
+                          review.reviewer_avatar.value
+                          | image_url: width: 48
+                          | image_tag: class: 'w-full h-full object-cover'
+                        }}
+                      {% else %}
+                        {% render 'icon-account', class_name: 'w-full h-full text-gray-400 p-0.5' %}
+                      {% endif %}
+                    </div>
+                    <span class="font-body font-bold text-[14px] text-text">
+                      {{ review.reviewer_name.value }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Pagination Dots (Mobile Only) -->
+      <div class="embla__dots flex justify-center gap-2 mt-6 md:hidden">
+        {% for review in reviews %}
+          <button
+            class="embla__dot w-2 h-2 rounded-full bg-secondary opacity-30 transition-opacity"
+            aria-label="Go to slide {{ forloop.index }}"
+          ></button>
         {% endfor %}
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const emblaNode = document.getElementById('reviews-carousel');
+      const dotsNode = document.querySelector('.embla__dots');
+      const dots = dotsNode.querySelectorAll('.embla__dot');
+      let emblaApi;
+
+      function initEmbla() {
+        if (window.innerWidth < 768) {
+          if (!emblaApi) {
+            emblaApi = EmblaCarousel(emblaNode, {
+              loop: false,
+              align: 'start',
+              containScroll: 'trimSnaps',
+            });
+
+            // Add dot navigation
+            emblaApi.on('select', () => {
+              const selectedIndex = emblaApi.selectedScrollSnap();
+              dots.forEach((dot, index) => {
+                if (index === selectedIndex) {
+                  dot.classList.add('opacity-100');
+                  dot.classList.remove('opacity-30');
+                } else {
+                  dot.classList.add('opacity-30');
+                  dot.classList.remove('opacity-100');
+                }
+              });
+            });
+
+            // Initial dot state
+            dots[0].classList.add('opacity-100');
+            dots[0].classList.remove('opacity-30');
+
+            dots.forEach((dot, index) => {
+              dot.addEventListener('click', () => emblaApi.scrollTo(index));
+            });
+          }
+        } else {
+          if (emblaApi) {
+            emblaApi.destroy();
+            emblaApi = undefined;
+          }
+        }
+      }
+
+      // Init on load
+      initEmbla();
+
+      // Re-init on resize
+      window.addEventListener('resize', () => {
+        initEmbla();
+      });
+    });
+  </script>
 {% endif %}
 
 {% schema %}

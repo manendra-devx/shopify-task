@@ -832,6 +832,10 @@ video {
   margin-bottom: 8px;
 }
 
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -1006,6 +1010,10 @@ video {
   height: 11px;
 }
 
+.h-2 {
+  height: 0.5rem;
+}
+
 .max-h-0 {
   max-height: 0px;
 }
@@ -1146,6 +1154,10 @@ video {
   width: 6px;
 }
 
+.w-2 {
+  width: 0.5rem;
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -1208,6 +1220,14 @@ video {
 
 .flex-\[2\] {
   flex: 2;
+}
+
+.flex-\[0_0_85\%\] {
+  flex: 0 0 85%;
+}
+
+.flex-none {
+  flex: none;
 }
 
 .flex-shrink {
@@ -1781,6 +1801,11 @@ video {
   background-color: ;
 }
 
+.bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity, 1));
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -2068,6 +2093,10 @@ video {
 
 .pl-2 {
   padding-left: 0.5rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
 }
 
 .text-left {
@@ -2556,6 +2585,14 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.first\:pl-4:first-child {
+  padding-left: 1rem;
+}
+
+.last\:pr-4:last-child {
+  padding-right: 1rem;
+}
+
 .hover\:scale-105:hover {
   --tw-scale-x: 1.05;
   --tw-scale-y: 1.05;
@@ -2730,6 +2767,10 @@ video {
     height: 220px;
   }
 
+  .sm\:h-auto {
+    height: auto;
+  }
+
   .sm\:w-\[146px\] {
     width: 146px;
   }
@@ -2740,6 +2781,10 @@ video {
 
   .sm\:w-auto {
     width: auto;
+  }
+
+  .sm\:flex-none {
+    flex: none;
   }
 
   .sm\:flex-row {
@@ -2818,8 +2863,20 @@ video {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .md\:flex-wrap {
+    flex-wrap: wrap;
+  }
+
+  .md\:justify-center {
+    justify-content: center;
+  }
+
   .md\:gap-6 {
     gap: 1.5rem;
+  }
+
+  .md\:gap-2 {
+    gap: 0.5rem;
   }
 
   .md\:px-8 {
@@ -2859,6 +2916,10 @@ video {
     padding-top: 32px;
   }
 
+  .md\:pl-0 {
+    padding-left: 0px;
+  }
+
   .md\:text-3xl {
     font-size: 1.875rem;
     line-height: 2.25rem;
@@ -2876,6 +2937,14 @@ video {
 
   .md\:text-\[40px\] {
     font-size: 40px;
+  }
+
+  .md\:first\:pl-0:first-child {
+    padding-left: 0px;
+  }
+
+  .md\:last\:pr-0:last-child {
+    padding-right: 0px;
   }
 }
 
