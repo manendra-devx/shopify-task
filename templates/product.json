@@ -12,9 +12,87 @@
     "main": {
       "type": "product",
       "settings": {}
+    },
+    "marquee_WyRBkr": {
+      "type": "marquee",
+      "blocks": {
+        "text_zpF7wG": {
+          "type": "text",
+          "settings": {
+            "text": "Scientifically Formulated"
+          }
+        },
+        "text_MLezFU": {
+          "type": "text",
+          "settings": {
+            "text": "Targets Root Cause"
+          }
+        },
+        "text_yyyHcG": {
+          "type": "text",
+          "settings": {
+            "text": "Vet Approved"
+          }
+        },
+        "image_jT6VfB": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Vector.png"
+          }
+        }
+      },
+      "block_order": [
+        "text_zpF7wG",
+        "text_MLezFU",
+        "text_yyyHcG",
+        "image_jT6VfB"
+      ],
+      "name": "Marquee",
+      "settings": {
+        "speed": 100,
+        "bg_color": "#E52888",
+        "text_color": "#F9F3F1"
+      }
+    },
+    "reviews_p3KCRA": {
+      "type": "reviews",
+      "name": "Customer Reviews",
+      "settings": {
+        "title": "Hear from our Customers!",
+        "bg_color": "#FDFBF7",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "video_marquee_eXnc3m": {
+      "type": "video-marquee",
+      "name": "Live Video Marquee",
+      "settings": {
+        "speed": 40,
+        "bg_color": "#FFFFFF",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "product_description_k6jTGp": {
+      "type": "product-description",
+      "name": "Product Description",
+      "settings": {}
+    },
+    "ingredients_tAahyG": {
+      "type": "ingredients",
+      "name": "Ingredients",
+      "settings": {
+        "title": "Ingredients"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "marquee_WyRBkr",
+    "reviews_p3KCRA",
+    "video_marquee_eXnc3m",
+    "product_description_k6jTGp",
+    "ingredients_tAahyG"
   ]
 }
