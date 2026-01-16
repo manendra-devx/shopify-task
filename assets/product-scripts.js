@@ -34,6 +34,47 @@ function updateCouponPrices(currentPriceCents) {
     });
 }
 
+// Direct Checkout
+function buyNow(btn) {
+    const variantIdInput = document.getElementById('SelectedVariantId');
+    const quantityInput = document.getElementById('Quantity');
+
+    if (!variantIdInput || !quantityInput) {
+        console.error('Missing variant or quantity input');
+        return;
+    }
+
+    // Show Loader
+    if (btn) {
+        if (!btn.dataset.original) {
+            btn.dataset.original = btn.innerHTML;
+        }
+        btn.innerHTML = `
+            <span class="loader w-4 h-4 mr-2"></span>
+            <span class="font-['Cabin'] font-medium text-[16px] text-[#F9F3F1] uppercase leading-none mt-[2px]">Processing...</span>
+        `;
+        btn.classList.add('btn-loading');
+    }
+
+    const variantId = variantIdInput.value;
+    const quantity = quantityInput.value;
+
+    window.location.href = `/cart/${variantId}:${quantity}`;
+}
+
+// Reset Buy It Now button on page show (back button navigation)
+window.addEventListener('pageshow', (event) => {
+    // Select all potential Buy It Now buttons that might be loading
+    // Since we didn't add a specific ID or class to target, we can rely on the onclick attribute or just add a class in liquid.
+    // However, we added 'btn-loading' class. We can reset any button with 'btn-loading' AND 'data-original'.
+    const loadingBtns = document.querySelectorAll('.btn-loading[data-original]');
+    loadingBtns.forEach(btn => {
+        btn.innerHTML = btn.dataset.original;
+        btn.classList.remove('btn-loading');
+        delete btn.dataset.original;
+    });
+});
+
 function selectVariant(btn) {
     const variantId = btn.dataset.variantId;
     const price = btn.dataset.price;

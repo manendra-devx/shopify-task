@@ -113,6 +113,23 @@ body {
   transform: scale(1.02);
 }
 
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: white;
+  border-radius: 9999px;
+  /* rounded-full */
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #c91e75;
+  /* Darker shade of secondary */
+  transform: scale(1.02);
+}
+
 /* Badges */
 .badge-pink {
   background-color: var(--color-secondary-light);
