@@ -14,17 +14,17 @@
 
       <!-- Reviews Grid / Carousel -->
       <div class="embla w-full overflow-hidden" id="reviews-carousel">
-        <div class="embla__container flex pl-4 md:pl-0 md:flex-wrap md:justify-center md:gap-2">
+        <div class="embla__container flex pl-4 md:pl-0">
           {% for review in reviews %}
             <!-- Individual Review Card -->
             <div
-              class="embla__slide flex-[0_0_85%] min-w-0 sm:flex-none mr-4 last:mr-0 md:mr-0"
+              class="embla__slide flex-[0_0_auto] mr-2 sm:mr-[20px] last:mr-0"
             >
               <div
-                class="review-card relative flex flex-col sm:flex-row bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden w-full sm:w-[414px] min-h-[220px] h-full"
+                class="review-card relative flex flex-row bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden w-[354px] sm:w-[414px] h-[220px]"
               >
                 <!-- Left Image -->
-                <div class="flex-shrink-0 w-full sm:w-[146px] h-[200px] sm:h-auto">
+                <div class="flex-shrink-0 w-[146px] h-full">
                   {% if review.main_image.value != blank %}
                     {{
                       review.main_image.value
@@ -37,7 +37,7 @@
                 </div>
 
                 <!-- Right Content Column -->
-                <div class="flex-1 flex flex-col p-4">
+                <div class="flex-1 flex flex-col p-4 w-full min-w-0">
                   <!-- Quote Icon SVG -->
                   <div class="mb-2">
                     <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -109,7 +109,7 @@
                   </div>
 
                   <!-- Review Text -->
-                  <div class="flex-1">
+                  <div class="flex-1 overflow-y-auto">
                     <p class="font-body text-[14px] leading-[140%] text-text">
                       {{ review.review_text.value | newline_to_br }}
                     </p>
@@ -139,7 +139,7 @@
         </div>
       </div>
 
-      <!-- Pagination Dots (Mobile Only) -->
+      <!-- Pagination Dots -->
       <div class="embla__dots flex justify-center gap-2 mt-6 md:hidden">
         {% for review in reviews %}
           <button
@@ -156,54 +156,43 @@
       const emblaNode = document.getElementById('reviews-carousel');
       const dotsNode = document.querySelector('.embla__dots');
       const dots = dotsNode.querySelectorAll('.embla__dot');
-      let emblaApi;
 
       function initEmbla() {
-        if (window.innerWidth < 768) {
-          if (!emblaApi) {
-            emblaApi = EmblaCarousel(emblaNode, {
-              loop: false,
-              align: 'start',
-              containScroll: 'trimSnaps',
-            });
+        if (!window.EmblaCarousel || !emblaNode) return;
 
-            // Add dot navigation
-            emblaApi.on('select', () => {
-              const selectedIndex = emblaApi.selectedScrollSnap();
-              dots.forEach((dot, index) => {
-                if (index === selectedIndex) {
-                  dot.classList.add('opacity-100');
-                  dot.classList.remove('opacity-30');
-                } else {
-                  dot.classList.add('opacity-30');
-                  dot.classList.remove('opacity-100');
-                }
-              });
-            });
+        const emblaApi = EmblaCarousel(emblaNode, {
+          loop: false,
+          align: 'start',
+          containScroll: 'trimSnaps',
+          dragFree: true,
+        });
 
-            // Initial dot state
-            dots[0].classList.add('opacity-100');
-            dots[0].classList.remove('opacity-30');
-
+        // Add dot navigation
+        if (dots.length > 0) {
+          emblaApi.on('select', () => {
+            const selectedIndex = emblaApi.selectedScrollSnap();
             dots.forEach((dot, index) => {
-              dot.addEventListener('click', () => emblaApi.scrollTo(index));
+              if (index === selectedIndex) {
+                dot.classList.add('opacity-100');
+                dot.classList.remove('opacity-30');
+              } else {
+                dot.classList.add('opacity-30');
+                dot.classList.remove('opacity-100');
+              }
             });
-          }
-        } else {
-          if (emblaApi) {
-            emblaApi.destroy();
-            emblaApi = undefined;
-          }
+          });
+
+          // Initial dot state
+          dots[0].classList.add('opacity-100');
+          dots[0].classList.remove('opacity-30');
+
+          dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => emblaApi.scrollTo(index));
+          });
         }
       }
 
-      // Init on load
       initEmbla();
-
-      // Re-init on resize
-      window.addEventListener('resize', () => {
-        initEmbla();
-      });
     });
   </script>
 {% endif %}
