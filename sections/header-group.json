@@ -20,6 +20,14 @@
     "annoucment_bar_QzmkAC": {
       "type": "annoucment-bar",
       "blocks": {
+        "announcement_nVtDat": {
+          "type": "announcement",
+          "settings": {
+            "enable": true,
+            "text": "Get 20% OFF on 2 or more Wellie Bellie Bites",
+            "link": ""
+          }
+        },
         "announcement_pzR4r7": {
           "type": "announcement",
           "settings": {
@@ -30,13 +38,14 @@
         }
       },
       "block_order": [
+        "announcement_nVtDat",
         "announcement_pzR4r7"
       ],
       "name": "Announcement Bar",
       "settings": {
         "rotation_speed": 4,
-        "bg_color": "#025A60",
-        "text_color": "#F9F3F1"
+        "bg_color": "#025a60",
+        "text_color": "#f9f3f1"
       }
     }
   },
