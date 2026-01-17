@@ -1,28 +1,71 @@
-<header class="relative flex items-center justify-between p-4 md:p-8">
-  <nav class="hidden md:block" aria-label="Main navigation">
-    <ul class="flex items-center gap-8 list-none">
+<header class="relative flex items-center justify-between px-4 md:px-[80px] w-full h-[100px] opacity-100 mx-auto z-40 bg-[#F9F3F1] border-[0.5px] border-[#3A3A3E33] shadow-[0px_4px_10px_0px_#3A3A3E0D]">
+  <!-- Part 1: Mobile Menu Toggle (Left) -->
+  <div class="flex items-center justify-start gap-4">
+    <button
+      type="button"
+      class="block md:hidden bg-transparent border-none cursor-pointer p-2"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      data-menu-toggle
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="17" cy="17" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="17" cy="7" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="7" cy="7" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="7" cy="17" r="1.75" fill="#025A60" stroke="#025A60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- Logo (Centered on Mobile, Left on Desktop) -->
+    <a
+      href="{{ routes.root_url }}"
+      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 block"
+      aria-label="Willie"
+    >
+      {% if settings.logo != blank %}
+        {{
+          settings.logo
+          | image_url: width: 600
+          | image_tag: class: 'w-[135px] h-auto object-contain opacity-100', loading: 'eager', alt: shop.name
+        }}
+      {% else %}
+        <span class="text-2xl font-bold">Willie</span>
+      {% endif %}
+    </a>
+  </div>
+
+  <!-- Part 2: Navigation (Desktop) -->
+  <nav
+    class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center p-0"
+    aria-label="Main navigation"
+  >
+    <ul class="flex items-center justify-center gap-[40px] w-[480px] h-[75px] bg-[#F9F3F1] p-[10px] list-none rounded-none">
       {% for link in section.settings.menu.links %}
         <li class="relative">
           <div class="group">
             {% if link.links.size > 0 %}
-              <span class="flex items-center gap-1 text-inherit cursor-pointer hover:underline hover:underline-offset-4">
+              <span class="flex items-center gap-1 cursor-pointer font-body font-medium text-[16px] text-primary leading-[100%] hover:opacity-80 text-center justify-center">
                 {{ link.title }}
                 {% render 'icon-chevron-down',
-                  class_name: 'w-4 h-4 transition-transform duration-200 group-hover:rotate-180'
+                  class_name: 'w-4 h-4 transition-transform duration-200 group-hover:rotate-180 text-primary'
                 %}
               </span>
             {% else %}
-              <a href="{{ link.url }}" class="no-underline hover:underline hover:underline-offset-4 text-inherit">
+              <a
+                href="{{ link.url }}"
+                class="no-underline font-body font-medium text-[16px] text-primary leading-[100%] hover:opacity-80 text-center block w-full"
+              >
                 {{ link.title }}
               </a>
             {% endif %}
+
             {% if link.links.size > 0 %}
-              <ul class="absolute top-full left-0 min-w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2 mt-2 list-none">
+              <ul class="absolute top-full left-1/2 -translate-x-1/2 min-w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2 mt-2 list-none border border-gray-100 text-left">
                 {% for child_link in link.links %}
                   <li>
                     <a
                       href="{{ child_link.url }}"
-                      class="block px-4 py-2 no-underline hover:underline hover:underline-offset-4 text-inherit"
+                      class="block px-4 py-2 no-underline hover:bg-gray-50 font-body font-medium text-[14px] text-primary"
                     >
                       {{ child_link.title }}
                     </a>
@@ -36,33 +79,29 @@
     </ul>
   </nav>
 
-  <button
-    type="button"
-    class="block md:hidden bg-transparent border-none cursor-pointer p-2"
-    aria-label="Toggle menu"
-    aria-expanded="false"
-    data-menu-toggle
-  >
-    {% render 'icon-hamburger' %}
-  </button>
-
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-    <a href="{{ routes.root_url }}" class="block" aria-label="{{ shop.name }}">
-      {% if settings.logo != blank %}
-        {% render 'logo', class_name: 'w-auto h-10' %}
-
-      {% else %}
-        <span class="text-2xl font-bold">{{ shop.name }}</span>
-      {% endif %}
+  <!-- Part 3: Icons (Search, Account, Cart) -->
+  <div class="flex flex-1 items-center justify-end gap-4">
+    <a href="{{ routes.search_url }}" class="hidden md:inline-block p-2 text-inherit" aria-label="Search">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11.5" cy="11.5" r="8.5" stroke="#025A60" stroke-width="1.5"/>
+        <path d="M21 21L18 18" stroke="#025A60" stroke-width="1.5" stroke-linecap="square"/>
+      </svg>
     </a>
-  </div>
 
-  <div class="flex items-center">
+    {% if shop.customer_accounts_enabled %}
+      <a href="{{ routes.account_url }}" class="hidden md:inline-block p-2 text-inherit" aria-label="Account">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="7" r="3" stroke="#025A60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 13C8.13401 13 5 16.134 5 20H19C19 16.134 15.866 13 12 13Z" stroke="#025A60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    {% endif %}
+
     {% render 'cart-icon' %}
   </div>
 
   <nav
-    class="fixed top-0 left-0 w-4/5 max-w-sm h-full bg-white z-40 transform -translate-x-full transition-transform duration-300 ease-in-out hidden shadow-lg md:hidden"
+    class="fixed text-primary top-0 left-0 w-4/5 max-w-sm h-full bg-white z-40 transform -translate-x-full transition-transform duration-300 ease-in-out hidden shadow-lg md:hidden"
     data-mobile-menu
     aria-label="Mobile navigation"
   >
@@ -75,7 +114,7 @@
       >
         {% render 'icon-close', color: 'black' %}
       </button>
-      <ul class="space-y-8 list-none">
+      <ul class="flex flex-col gap-[20px] w-[112px] h-[24px] opacity-100 list-none">
         {% for link in section.settings.menu.links %}
           <li>
             {% if link.links.size > 0 %}
@@ -129,6 +168,7 @@
 {% schema %}
 {
   "name": "t:general.header",
+  "class": "header-section order-1 md:order-2",
   "settings": [
     {
       "type": "link_list",

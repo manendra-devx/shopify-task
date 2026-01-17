@@ -15,11 +15,14 @@
     {{ content_for_header }}
 
     <script src="{{ 'product-form.js' | asset_url }}" defer></script>
+    <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js" defer></script>
     <script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
   </head>
 
   <body class="{{ template.name }} {{ template.suffix }}">
-    {% sections 'header-group' %}
+    <div class="flex flex-col">
+      {% sections 'header-group' %}
+    </div>
     <main class="flex-1">
       {{ content_for_layout }}
       {% section 'cart-drawer' %}

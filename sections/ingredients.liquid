@@ -1,0 +1,138 @@
+{% assign ingredients = product.metafields.custom.ingredients.value %}
+{% if ingredients != blank %}
+  <section class="w-full py-12">
+    <div class="max-w-[1280px] mx-auto px-[18px] md:px-0 flex flex-col items-center">
+      <!-- Section Title -->
+      <h2 class="w-full text-center font-['Cabin'] font-bold text-[36px] leading-[100%] text-[#3A3A3E] mb-[48px]">
+        {{ section.settings.title | default: 'Key Ingredients' }}
+      </h2>
+
+      <!-- Ingredients Grid -->
+      <div class="flex flex-wrap justify-between md:justify-center items-start gap-y-[20px] md:gap-[20px] w-full max-w-[354px] md:max-w-none md:w-full mx-auto">
+        {% for item in ingredients %}
+          <div class="relative w-[170px] md:w-[305px] h-[260px] md:h-auto md:min-h-[400px] bg-white rounded-[8px] border-[0.6px] border-[#3A3A3E1A] overflow-hidden group flex flex-col">
+            <!-- Image Area (Fixed Height 129px mobile, 247px desktop) -->
+            <div class="w-full h-[129px] md:h-[247px] flex-shrink-0 overflow-hidden">
+              {% if item.image != blank %}
+                {{
+                  item.image
+                  | image_url: width: 600
+                  | image_tag:
+                    class: 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105',
+                    loading: 'lazy'
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100 text-gray-400' }}
+              {% endif %}
+            </div>
+
+            <!-- Content Area (Flex-1 for expansion) -->
+            <div
+              class="flex-1 flex flex-col px-[10px] md:px-[16px] pt-[10px] md:pt-[16px] pb-[16px]"
+            >
+              <!-- Card Title -->
+              <h3 class="font-['Cabin'] font-bold text-[16px] md:text-[22px] leading-[100%] text-[#3A3A3E] mb-[4px]">
+                {{ item.title }}
+              </h3>
+
+              <!-- Card Description with Read More -->
+              <div class="description-container relative font-['Cabin'] font-normal text-[12px] md:text-[14px] leading-[150%] text-[#3A3A3E]">
+                <div class="description-content line-clamp-2" id="desc-{{ forloop.index }}">
+                  {{ item.description }}
+                </div>
+                <button
+                  onclick="toggleDescription('desc-{{ forloop.index }}', this)"
+                  class="font-['Cabin'] font-bold text-[14px] leading-[150%] text-[#3A3A3E] mt-0.5 hover:underline"
+                >
+                  Read more
+                </button>
+              </div>
+
+              <!-- Tags (Pushed to bottom, 38px gap from text on mobile) -->
+              {% if item.tags != blank %}
+                <div class="tags-container absolute top-[230px] left-[10px] w-full pr-[20px] md:static md:w-auto md:pr-0 md:mt-auto flex flex-wrap gap-[10px] pt-0 md:pt-4">
+                  {% for tag in item.tags.value %}
+                    <span
+                      class="flex items-center justify-center px-[10px] py-[4px] h-[25px] rounded-[40px] border-[0.5px] border-[#025A6033] font-['Cabin'] uppercase font-normal text-[14px] leading-[100%] text-[#025A60]"
+                      style="background-color: #025A601A;"
+                    >
+                      {{ tag }}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+<script>
+  function toggleDescription(id, btn) {
+    const content = document.getElementById(id);
+    if (!content) return;
+
+    // Find the parent card
+    const card = content.closest('.group');
+    // Find the tags container within this card
+    const tagsContainer = card ? card.querySelector('.tags-container') : null;
+
+    // Toggle line clamp
+    if (content.classList.contains('line-clamp-2')) {
+      // EXPAND
+      content.classList.remove('line-clamp-2');
+      btn.textContent = 'Read less';
+
+      // Remove fixed height on mobile, allow expansion
+      if (card) {
+        card.classList.remove('h-[260px]');
+        card.classList.add('h-auto', 'min-h-[260px]');
+      }
+
+      // Switch tags from absolute to static relative to content
+      if (tagsContainer) {
+        tagsContainer.classList.remove('absolute', 'top-[230px]', 'left-[10px]', 'w-full', 'pr-[20px]');
+        tagsContainer.classList.add('relative', 'mt-[20px]', 'w-auto');
+      }
+    } else {
+      // COLLAPSE
+      content.classList.add('line-clamp-2');
+      btn.textContent = 'Read more';
+
+      // Revert to fixed height
+      if (card) {
+        card.classList.remove('h-auto', 'min-h-[260px]');
+        card.classList.add('h-[260px]');
+      }
+
+      // Revert tags to absolute
+      if (tagsContainer) {
+        tagsContainer.classList.remove('relative', 'mt-[20px]', 'w-auto');
+        tagsContainer.classList.add('absolute', 'top-[230px]', 'left-[10px]', 'w-full', 'pr-[20px]');
+      }
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Ingredients",
+  "tag": "section",
+  "class": "section-ingredients",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Premium Ingredients"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingredients"
+    }
+  ]
+}
+{% endschema %}

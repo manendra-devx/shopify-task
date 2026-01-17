@@ -1,0 +1,159 @@
+{% assign config = product.metafields.custom.video_highlight.value %}
+{% if config != blank %}
+  {{ 'video-marquee.css' | asset_url | stylesheet_tag }}
+  <!--
+    Section Container
+    Uses common 'section-container' class for standard full-width, relative positioning.
+    Padding is controlled by schema settings.
+  -->
+  <div
+    class="section-container"
+    style="
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    "
+  >
+    <!--
+      Content Wrapper
+      Uses common 'section-content' class for max-width (1280px), centering, and padding.
+    -->
+    <div class="section-content flex flex-col items-center">
+      <!-- Section Header -->
+      <div class="mb-[24px] text-center w-full max-w-[800px] mx-auto px-4 z-10 relative">
+        {% if config.title.value != blank %}
+          <h2 class="section-title">
+            {{ config.title.value }}
+          </h2>
+        {% endif %}
+        {% if config.description.value != blank %}
+          <div class="section-description">
+            {{ config.description.value | newline_to_br }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Marquee Wrapper -> Replaced with Embla Carousel -->
+    <div class="video-carousel embla w-full overflow-hidden pb-10 relative" id="video-marquee-carousel">
+      <div class="embla__container flex">
+        {% for item in config.videos.value %}
+          {% assign video_src = item.video.value | default: item %}
+          {% if video_src != blank %}
+            <div class="embla__slide flex-[0_0_280px] mx-[10px] min-w-0 relative">
+              <div
+                class="relative w-[280px] h-[500px] rounded-[16px] overflow-hidden bg-gray-100 border-[1px] border-gray-100 shadow-sm cursor-pointer group video-card"
+              >
+                <!-- Video Tag (Paused, Muted initially) -->
+                {{
+                  video_src
+                  | video_tag:
+                    autoplay: false,
+                    loop: true,
+                    muted: false,
+                    controls: false,
+                    class: 'w-full h-full object-cover',
+                    preload: 'metadata'
+                }}
+
+                <!-- Custom Play Icon Overlay -->
+                <div
+                  class="play-icon-overlay absolute inset-0 flex items-center justify-center transition-opacity duration-300 z-10"
+                  style="background: linear-gradient(180deg, rgba(58, 58, 62, 0) 66.76%, #3A3A3E 100%);"
+                >
+                  <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <foreignObject x="-4" y="-4" width="38" height="38">
+                      <div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(2px);clip-path:url(#bgblur_0_0_1619_clip_path_{{ forloop.index }});height:100%;width:100%"></div>
+                    </foreignObject>
+                    <g data-figma-bg-blur-radius="4">
+                      <rect width="30" height="30" rx="15" fill="white" fill-opacity="0.2"/>
+                      <rect x="0.2" y="0.2" width="29.6" height="29.6" rx="14.8" stroke="white" stroke-opacity="0.4" stroke-width="0.4"/>
+                      <path d="M21.3847 15L10.6155 21.1539L10.6155 8.84619L21.3847 15Z" fill="white" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <defs>
+                      <clipPath id="bgblur_0_0_1619_clip_path_{{ forloop.index }}" transform="translate(4 4)">
+                        <rect width="30" height="30" rx="15"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Navigation Buttons -->
+      <button
+        id="MarqueePrevButton"
+        class="absolute top-1/2 left-4 -translate-y-1/2 z-10 w-[24px] h-[24px] rounded-full bg-[#E52888] border-[0.5px] border-[#D4E391] shadow-[0.5px_0.5px_0px_#D4E391] flex md:hidden items-center justify-center flex-shrink-0 transition-transform hover:scale-105"
+        aria-label="Previous Slide"
+      >
+        <svg class="w-[6px] h-[11px] rotate-180" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.06067 1.06067L5.06067 5.06067L1.06067 9.06067" stroke="#D4E391" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button
+        id="MarqueeNextButton"
+        class="absolute top-1/2 right-4 -translate-y-1/2 z-10 w-[24px] h-[24px] rounded-full bg-[#E52888] border-[0.5px] border-[#D4E391] shadow-[0.5px_0.5px_0px_#D4E391] flex md:hidden items-center justify-center flex-shrink-0 transition-transform hover:scale-105"
+        aria-label="Next Slide"
+      >
+        <svg class="w-[6px] h-[11px]" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.06067 1.06067L5.06067 5.06067L1.06067 9.06067" stroke="#D4E391" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Live Video Marquee",
+  "tag": "section",
+  "class": "section-video-marquee",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content controlled via Metaobject"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "unit": "s",
+      "label": "Animation Speed",
+      "default": 40
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Live Video Marquee"
+    }
+  ]
+}
+{% endschema %}

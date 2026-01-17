@@ -6,7 +6,7 @@
     "build": "tailwindcss -i ./src/input.css -o ./assets/tailwind.css",
     "build:prod": "tailwindcss -i ./src/input.css -o ./assets/tailwind.css --minify",
     "dev": "tailwindcss -i ./src/input.css -o ./assets/tailwind.css --watch",
-    "shopify": "shopify theme dev --store your-store.myshopify.com"
+    "shopify": "shopify theme dev --store manendra-jadeja.myshopify.com"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",

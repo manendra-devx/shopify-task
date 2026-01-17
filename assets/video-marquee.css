@@ -1,0 +1,18 @@
+@keyframes video-marquee-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-video-marquee {
+    animation: video-marquee-scroll linear infinite;
+}
+
+/* Pause animation on hover of the container */
+.video-marquee-wrapper:hover .animate-video-marquee {
+    animation-play-state: paused;
+}

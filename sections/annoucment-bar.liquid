@@ -1,0 +1,105 @@
+<div
+  class="announcement-bar w-full min-h-[25px] h-auto overflow-hidden px-[20px] md:px-[69px] py-[5px] gap-[9px] opacity-100 font-medium text-center flex items-center justify-center relative box-border"
+  style="
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  "
+  data-interval="{{ section.settings.rotation_speed | times: 1000 }}"
+>
+  <div class="announcement-track flex w-full transition-transform duration-[600ms] ease-[ease]">
+    {% for block in section.blocks %}
+      {% if block.settings.enable %}
+        <div class="announcement-item w-full min-h-[15px] min-w-full opacity-100 transform rotate-0 flex items-center justify-center font-medium text-[12px] font-body shrink-0 px-4 text-center whitespace-normal">
+          {% if block.settings.link != blank %}
+            <a href="{{ block.settings.link }}" class="text-inherit no-underline block w-full">
+              {{ block.settings.text }}
+            </a>
+          {% else %}
+            {{ block.settings.text }}
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const bar = document.querySelector('.announcement-bar');
+    if (!bar) return;
+
+    const track = bar.querySelector('.announcement-track');
+    const items = bar.querySelectorAll('.announcement-item');
+    const interval = parseInt(bar.dataset.interval);
+
+    let index = 0;
+
+    if (items.length > 1) {
+      setInterval(() => {
+        index = (index + 1) % items.length;
+        track.style.transform = `translateX(-${index * 100}%)`;
+      }, interval);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "class": "announcement-bar-section order-2 md:order-1",
+  "settings": [
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "label": "Rotation speed (seconds)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#025A60"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#F9F3F1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable",
+          "label": "Enable this message",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Announcement text",
+          "default": "Free shipping on all orders"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Optional link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Announcement Bar"
+    }
+  ]
+}
+{% endschema %}
