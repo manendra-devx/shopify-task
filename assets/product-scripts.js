@@ -1,3 +1,7 @@
+/**
+ * Updates the quantity input value.
+ * @param {number} change - The amount to change the quantity by (e.g., 1 or -1).
+ */
 function updateQty(change) {
     const input = document.getElementById('Quantity');
     if (!input) return;
@@ -8,6 +12,11 @@ function updateQty(change) {
     input.value = val < 10 ? '0' + val : val;
 }
 
+/**
+ * Copies the coupon code to the clipboard and updates the button text temporarily.
+ * @param {string} code - The coupon code to copy.
+ * @param {HTMLElement} btn - The button element that was clicked.
+ */
 function copyCoupon(code, btn) {
     navigator.clipboard.writeText(code).then(() => {
         const originalHtml = btn.innerHTML;
@@ -19,7 +28,10 @@ function copyCoupon(code, btn) {
     });
 }
 
-// Update "Get it for..." prices based on current variant price and coupon discount
+/**
+ * Updates "Get it for..." prices based on current variant price and coupon discount.
+ * @param {number} currentPriceCents - The current variant price in cents.
+ */
 function updateCouponPrices(currentPriceCents) {
     document.querySelectorAll('.coupon-price-text').forEach(el => {
         const discountPercent = parseFloat(el.dataset.discount);
@@ -34,7 +46,10 @@ function updateCouponPrices(currentPriceCents) {
     });
 }
 
-// Direct Checkout
+/**
+ * Redirects to the cart page with the selected variant and quantity (Direct Checkout).
+ * @param {HTMLElement} btn - The button element that was clicked.
+ */
 function buyNow(btn) {
     const variantIdInput = document.getElementById('SelectedVariantId');
     const quantityInput = document.getElementById('Quantity');
@@ -62,7 +77,11 @@ function buyNow(btn) {
     window.location.href = `/cart/${variantId}:${quantity}`;
 }
 
-// Reset Buy It Now button on page show (back button navigation)
+/**
+ * Resets the "Buy It Now" button state on page show (e.g., when navigating back).
+ * This ensures the button is not stuck in a loading state.
+ * @param {Event} event - The pageshow event object.
+ */
 window.addEventListener('pageshow', (event) => {
     // Select all potential Buy It Now buttons that might be loading
     // Since we didn't add a specific ID or class to target, we can rely on the onclick attribute or just add a class in liquid.
@@ -75,6 +94,10 @@ window.addEventListener('pageshow', (event) => {
     });
 });
 
+/**
+ * Handles variant selection: updates hidden input, UI prices, and active state of variant buttons.
+ * @param {HTMLElement} btn - The button element representing the selected variant.
+ */
 function selectVariant(btn) {
     const variantId = btn.dataset.variantId;
     const price = btn.dataset.price;
@@ -117,7 +140,10 @@ function selectVariant(btn) {
     btn.classList.add('bg-primary', 'text-white', 'border-primary');
 }
 
-// Embla Carousel Integration
+/**
+ * Initializes Embla Carousels for product images and coupons on DOMContentLoaded.
+ * Also handles initial coupon price updates and carousel navigation/thumbnail syncing.
+ */
 document.addEventListener('DOMContentLoaded', function () {
     const mainNode = document.getElementById('MainCarousel');
     const thumbNode = document.getElementById('ThumbCarousel');
@@ -150,7 +176,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (prevBtn) prevBtn.addEventListener('click', mainEmbla.scrollPrev);
         if (nextBtn) nextBtn.addEventListener('click', mainEmbla.scrollNext);
 
-        // Sync Thumbnails
+        /**
+         * Syncs the thumbnail carousel with the main carousel's selected slide.
+         * Updates active states and scrolls the thumbnail into view.
+         */
         const syncThumbs = () => {
             const index = mainEmbla.selectedScrollSnap();
             const slides = thumbNode.querySelectorAll('.embla__slide--thumb');

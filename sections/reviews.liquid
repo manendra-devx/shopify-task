@@ -1,19 +1,25 @@
 {% assign reviews = product.metafields.custom.reviews.value %}
 {% if reviews != blank %}
+  <!--
+    Section Container
+    Uses logical padding handled by schema and common 'section-container' class.
+  -->
   <div
-    class="w-full relative overflow-hidden"
+    class="section-container"
     style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
   >
-    <div class="max-w-[1280px] mx-auto px-4 md:px-0">
+    <!--
+      Content Wrapper
+      Centered with max-width 1280px via 'section-content'.
+    -->
+    <div class="section-content flex flex-col items-center">
       <!-- Section Title -->
-      {% if section.settings.title != blank %}
-        <h2 class="font-body font-bold text-[32px] md:text-[40px] text-text text-center mb-[48px]">
-          {{ section.settings.title }}
-        </h2>
-      {% endif %}
+      <h2 class="section-title mb-[24px]">
+        {{ section.settings.title }}
+      </h2>
 
       <!-- Reviews Grid / Carousel -->
-      <div class="embla w-full overflow-hidden" id="reviews-carousel">
+      <div id="reviews-carousel" class="embla w-full max-w-[1280px] mx-auto overflow-hidden">
         <div class="embla__container flex pl-4 md:pl-0">
           {% for review in reviews %}
             <!-- Individual Review Card -->
@@ -151,50 +157,7 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const emblaNode = document.getElementById('reviews-carousel');
-      const dotsNode = document.querySelector('.embla__dots');
-      const dots = dotsNode.querySelectorAll('.embla__dot');
-
-      function initEmbla() {
-        if (!window.EmblaCarousel || !emblaNode) return;
-
-        const emblaApi = EmblaCarousel(emblaNode, {
-          loop: false,
-          align: 'start',
-          containScroll: 'trimSnaps',
-          dragFree: true,
-        });
-
-        // Add dot navigation
-        if (dots.length > 0) {
-          emblaApi.on('select', () => {
-            const selectedIndex = emblaApi.selectedScrollSnap();
-            dots.forEach((dot, index) => {
-              if (index === selectedIndex) {
-                dot.classList.add('opacity-100');
-                dot.classList.remove('opacity-30');
-              } else {
-                dot.classList.add('opacity-30');
-                dot.classList.remove('opacity-100');
-              }
-            });
-          });
-
-          // Initial dot state
-          dots[0].classList.add('opacity-100');
-          dots[0].classList.remove('opacity-30');
-
-          dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => emblaApi.scrollTo(index));
-          });
-        }
-      }
-
-      initEmbla();
-    });
-  </script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
 {% endif %}
 
 {% schema %}
@@ -218,7 +181,7 @@
       "step": 4,
       "unit": "px",
       "label": "Padding Top",
-      "default": 48
+      "default": 32
     },
     {
       "type": "range",
@@ -228,7 +191,7 @@
       "step": 4,
       "unit": "px",
       "label": "Padding Bottom",
-      "default": 48
+      "default": 32
     }
   ],
   "blocks": [],

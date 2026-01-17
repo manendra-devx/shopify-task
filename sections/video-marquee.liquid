@@ -1,25 +1,40 @@
 {% assign config = product.metafields.custom.video_highlight.value %}
 {% if config != blank %}
   {{ 'video-marquee.css' | asset_url | stylesheet_tag }}
+  <!--
+    Section Container
+    Uses common 'section-container' class for standard full-width, relative positioning.
+    Padding is controlled by schema settings.
+  -->
   <div
-    class="w-full relative overflow-hidden"
-    style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+    class="section-container"
+    style="
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    "
   >
-    <div class="w-full max-w-[1280px] mx-auto flex flex-col items-center gap-[8px] mb-[8px] px-4">
-      {% if config.title.value != blank %}
-        <h2 class="font-body font-bold text-[32px] md:text-[40px] text-text text-center leading-none m-0">
-          {{ config.title.value }}
-        </h2>
-      {% endif %}
-      {% if config.description.value != blank %}
-        <div class="font-body text-[16px] text-text text-center leading-normal m-0 max-w-[800px]">
-          {{ config.description.value | newline_to_br }}
-        </div>
-      {% endif %}
+    <!--
+      Content Wrapper
+      Uses common 'section-content' class for max-width (1280px), centering, and padding.
+    -->
+    <div class="section-content flex flex-col items-center">
+      <!-- Section Header -->
+      <div class="mb-[24px] text-center w-full max-w-[800px] mx-auto px-4 z-10 relative">
+        {% if config.title.value != blank %}
+          <h2 class="section-title">
+            {{ config.title.value }}
+          </h2>
+        {% endif %}
+        {% if config.description.value != blank %}
+          <div class="section-description">
+            {{ config.description.value | newline_to_br }}
+          </div>
+        {% endif %}
+      </div>
     </div>
 
     <!-- Marquee Wrapper -> Replaced with Embla Carousel -->
-    <div class="video-carousel embla w-full overflow-hidden py-10 relative" id="video-marquee-carousel">
+    <div class="video-carousel embla w-full overflow-hidden pb-10 relative" id="video-marquee-carousel">
       <div class="embla__container flex">
         {% for item in config.videos.value %}
           {% assign video_src = item.video.value | default: item %}
@@ -89,76 +104,7 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const emblaNode = document.getElementById('video-marquee-carousel');
-      if (!emblaNode) return;
-
-      const viewport = emblaNode;
-      const emblaApi = EmblaCarousel(viewport, {
-        loop: true,
-        align: 'center',
-        dragFree: true,
-        containScroll: 'trimSnaps',
-      });
-
-      // Navigation Buttons
-      const prevBtn = document.getElementById('MarqueePrevButton');
-      const nextBtn = document.getElementById('MarqueeNextButton');
-
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => emblaApi.scrollPrev());
-      }
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => emblaApi.scrollNext());
-      }
-
-      // Add click listeners to slides
-      const slides = emblaNode.querySelectorAll('.embla__slide');
-
-      slides.forEach((slide, index) => {
-        const card = slide.querySelector('.video-card');
-        if (!card) return;
-
-        card.addEventListener('click', () => {
-          // 1. Scroll to this slide
-          emblaApi.scrollTo(index);
-
-          // 2. Handle Video Playback
-          toggleVideo(card);
-        });
-      });
-
-      // Helper: Toggle Video State
-      function toggleVideo(card) {
-        const video = card.querySelector('video');
-        const icon = card.querySelector('.play-icon-overlay');
-        const allVideos = document.querySelectorAll('.video-card video');
-
-        if (video.paused) {
-          // Pause all others
-          allVideos.forEach((v) => {
-            if (v !== video && !v.paused) {
-              v.pause();
-              const vIcon = v.parentElement.querySelector('.play-icon-overlay');
-              if (vIcon) vIcon.style.opacity = '1';
-            }
-          });
-
-          // Play active
-          video.play();
-          icon.style.opacity = '0';
-        } else {
-          // Pause active
-          video.pause();
-          icon.style.opacity = '1';
-        }
-      }
-
-      // Optional: Pause video if user drags carousel away?
-      // Keeping it simple for now as requested.
-    });
-  </script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
 {% endif %}
 
 {% schema %}
@@ -190,7 +136,7 @@
       "step": 4,
       "unit": "px",
       "label": "Padding Top",
-      "default": 48
+      "default": 32
     },
     {
       "type": "range",
@@ -200,7 +146,7 @@
       "step": 4,
       "unit": "px",
       "label": "Padding Bottom",
-      "default": 48
+      "default": 32
     }
   ],
   "blocks": [],

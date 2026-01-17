@@ -319,3 +319,42 @@ input[type="search"]::-moz-search-clear-button {
     content: '';
   }
 }
+
+
+/* Common Section Components */
+.section-container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-content {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--color-text);
+  text-align: center;
+  line-height: 100%;
+  margin: 0 auto;
+  margin-bottom: 8px;
+}
+
+.section-description {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--color-text);
+  text-align: center;
+  line-height: 100%;
+  margin: 0 auto;
+  max-width: 342px;
+}
