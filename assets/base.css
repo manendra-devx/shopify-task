@@ -333,8 +333,8 @@ input[type="search"]::-moz-search-clear-button {
   max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 18px;
+  padding-right: 18px;
 }
 
 .section-title {
@@ -356,5 +356,5 @@ input[type="search"]::-moz-search-clear-button {
   text-align: center;
   line-height: 100%;
   margin: 0 auto;
-  max-width: 342px;
+  max-width: 354px;
 }
