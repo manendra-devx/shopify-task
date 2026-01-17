@@ -50,8 +50,8 @@
       "name": "Marquee",
       "settings": {
         "speed": 100,
-        "bg_color": "#E52888",
-        "text_color": "#F9F3F1"
+        "bg_color": "#e52888",
+        "text_color": "#f9f3f1"
       }
     },
     "reviews_p3KCRA": {
@@ -59,7 +59,6 @@
       "name": "Customer Reviews",
       "settings": {
         "title": "Hear from our Customers!",
-        "bg_color": "#FDFBF7",
         "padding_top": 48,
         "padding_bottom": 48
       }
@@ -69,9 +68,8 @@
       "name": "Live Video Marquee",
       "settings": {
         "speed": 40,
-        "bg_color": "#fdfbf7",
         "padding_top": 48,
-        "padding_bottom": 48
+        "padding_bottom": 0
       }
     },
     "product_description_k6jTGp": {
@@ -83,7 +81,7 @@
       "type": "ingredients",
       "name": "Ingredients",
       "settings": {
-        "title": "Ingredients"
+        "title": "Premium Ingredients"
       }
     }
   },
