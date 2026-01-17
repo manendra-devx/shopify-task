@@ -7,10 +7,13 @@
   class="marquee-container w-full h-[40px] px-4 overflow-hidden flex items-center"
   style="background-color: {{ section.settings.bg_color }};"
 >
+  {% assign item_count = text_blocks.size | at_least: 1 %}
+  {% assign duration = section.settings.speed | times: item_count %}
+
   <!-- Container 1 -->
   <div
     class="flex animate-marquee min-w-full flex-shrink-0 items-center gap-[19px] pr-[19px]"
-    style="animation-duration: {{ section.settings.speed }}s;"
+    style="animation-duration: {{ duration }}s;"
   >
     {% if text_blocks.size > 0 %}
       {% for i in (1..15) %}
@@ -44,7 +47,7 @@
   <!-- Container 2 (Duplicate for smooth loop) -->
   <div
     class="flex animate-marquee min-w-full flex-shrink-0 items-center gap-[19px] pr-[19px]"
-    style="animation-duration: {{ section.settings.speed }}s;"
+    style="animation-duration: {{ duration }}s;"
   >
     {% if text_blocks.size > 0 %}
       {% for i in (1..15) %}
@@ -89,7 +92,7 @@
       "max": 100,
       "step": 1,
       "unit": "s",
-      "label": "Animation Speed",
+      "label": "Base Duration (per item)",
       "default": 20
     },
     {
