@@ -47,12 +47,12 @@
           <div class="embla__container flex gap-4 pr-4">
             {% for media in product.media %}
               <button
-                class="embla__slide--thumb w-[70px] h-[70px] flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all border-transparent opacity-50 relative"
+                class="embla__slide--thumb w-[70px] h-[70px] flex-shrink-0 rounded-[5px] border-[1px] p-[2px] transition-all border-[#025A60] relative"
                 onclick="scrollToSlide({{ forloop.index0 }})"
               >
                 <img
                   src="{{ media | image_url: width: 160 }}"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-cover rounded-[3px]"
                   alt="{{ media.alt }}"
                   width="160"
                   height="160"
@@ -304,62 +304,66 @@
 
       <!-- Dynamic Coupons Section -->
       {% if product.metafields.custom.coupons.value != blank %}
-        <div class="flex flex-wrap gap-3 mt-4" id="CouponContainer">
-          {% for coupon in product.metafields.custom.coupons.value %}
-            <div
-              class="relative flex items-center justify-between w-[264px] h-[56px] bg-primary-light border-[0.5px] border-dashed border-primary rounded-lg px-3 transition-all hover:bg-[#E6F4EA]"
-            >
-              <!-- Left Notch -->
-              <span
-                class="absolute -left-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-[#F9F3F1] rounded-full border-r-[0.5px] border-dashed border-primary z-10"
-              ></span>
-              <!-- Right Notch -->
-              <span
-                class="absolute -right-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-[#F9F3F1] rounded-full border-l-[0.5px] border-dashed border-primary z-10"
-              ></span>
-
-              <!-- Left Icon -->
-              <div class="flex-shrink-0 text-[#025A60]">
-                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M15 3.75L18.6594 6.1654L22.955 7.04505L23.8346 11.3406L26.25 15L23.8346 18.6594L22.955 22.955L18.6594 23.8346L15 26.25L11.3406 23.8346L7.04505 22.955L6.1654 18.6594L3.75 15L6.1654 11.3406L7.04505 7.04505L11.3406 6.1654L15 3.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M18.75 11.25L11.25 18.75M12.5 11.875C12.5 12.2202 12.2202 12.5 11.875 12.5C11.5298 12.5 11.25 12.2202 11.25 11.875C11.25 11.5298 11.5298 11.25 11.875 11.25C12.2202 11.25 12.5 11.5298 12.5 11.875ZM18.75 18.125C18.75 18.4702 18.4702 18.75 18.125 18.75C17.7798 18.75 17.5 18.4702 17.5 18.125C17.5 17.7798 17.7798 17.5 18.125 17.5C18.4702 17.5 18.75 17.7798 18.75 18.125Z" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
-                </svg>
-              </div>
-
-              <!-- Center Text -->
-              <div class="flex-1 flex flex-col items-start justify-center ml-3">
-                <p
-                  class="text-primary font-accent font-bold text-[18px] leading-none coupon-price-text"
-                  data-discount="{{ coupon.discount_percentage }}"
+        <div class="embla-coupons w-full overflow-hidden mt-4" id="CouponCarousel">
+          <div class="flex flex-nowrap md:flex-wrap md:gap-3" id="CouponContainer">
+            {% for coupon in product.metafields.custom.coupons.value %}
+              <div class="embla__slide flex-[0_0_auto] mr-3 md:mr-0 last:mr-0">
+                <div
+                  class="relative flex items-center justify-between w-[264px] h-[56px] bg-primary-light border-[0.5px] border-dashed border-primary rounded-lg px-3 transition-all"
                 >
-                  Get it for <span class="dynamic-price">...</span>
-                </p>
-                <p class="text-primary font-body font-normal text-[12px] leading-none mt-[2px]">
-                  {{ coupon.description }}
-                </p>
-              </div>
+                  <!-- Left Notch -->
+                  <span
+                    class="absolute -left-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-[#F9F3F1] rounded-full border-r-[0.5px] border-dashed border-primary z-10"
+                  ></span>
+                  <!-- Right Notch -->
+                  <span
+                    class="absolute -right-[6px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-[#F9F3F1] rounded-full border-l-[0.5px] border-dashed border-primary z-10"
+                  ></span>
 
-              <!-- Right Copy Button -->
-              <button
-                type="button"
-                onclick="copyCoupon('{{ coupon.title }}', this)"
-                class="flex-shrink-0 text-[#025A60] hover:text-[#024044] transition-colors"
-                title="Copy Coupon"
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="copy-icon"
-                >
-                  <path d="M15 16.5V20H9.5H4V8H8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M20 4H9V16H14.5H20V10V4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-          {% endfor %}
+                  <!-- Left Icon -->
+                  <div class="flex-shrink-0 text-[#025A60]">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 3.75L18.6594 6.1654L22.955 7.04505L23.8346 11.3406L26.25 15L23.8346 18.6594L22.955 22.955L18.6594 23.8346L15 26.25L11.3406 23.8346L7.04505 22.955L6.1654 18.6594L3.75 15L6.1654 11.3406L7.04505 7.04505L11.3406 6.1654L15 3.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M18.75 11.25L11.25 18.75M12.5 11.875C12.5 12.2202 12.2202 12.5 11.875 12.5C11.5298 12.5 11.25 12.2202 11.25 11.875C11.25 11.5298 11.5298 11.25 11.875 11.25C12.2202 11.25 12.5 11.5298 12.5 11.875ZM18.75 18.125C18.75 18.4702 18.4702 18.75 18.125 18.75C17.7798 18.75 17.5 18.4702 17.5 18.125C17.5 17.7798 17.7798 17.5 18.125 17.5C18.4702 17.5 18.75 17.7798 18.75 18.125Z" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+
+                  <!-- Center Text -->
+                  <div class="flex-1 flex flex-col items-start justify-center ml-3">
+                    <p
+                      class="text-primary font-accent font-bold text-[18px] leading-none coupon-price-text"
+                      data-discount="{{ coupon.discount_percentage }}"
+                    >
+                      Get it for <span class="dynamic-price">...</span>
+                    </p>
+                    <p class="text-primary font-body font-normal text-[12px] leading-none mt-[2px]">
+                      {{ coupon.description }}
+                    </p>
+                  </div>
+
+                  <!-- Right Copy Button -->
+                  <button
+                    type="button"
+                    onclick="copyCoupon('{{ coupon.title }}', this)"
+                    class="flex-shrink-0 text-[#025A60] hover:text-[#024044] transition-colors"
+                    title="Copy Coupon"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="copy-icon"
+                    >
+                      <path d="M15 16.5V20H9.5H4V8H8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M20 4H9V16H14.5H20V10V4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
         </div>
       {% endif %}
     </div>

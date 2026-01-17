@@ -3,7 +3,7 @@
   {{ 'video-marquee.css' | asset_url | stylesheet_tag }}
   <div
     class="w-full relative overflow-hidden"
-    style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
+    style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;"
   >
     <div class="w-full max-w-[1280px] mx-auto flex flex-col items-center gap-[8px] mb-[8px] px-4">
       {% if config.title.value != blank %}
@@ -19,7 +19,7 @@
     </div>
 
     <!-- Marquee Wrapper -> Replaced with Embla Carousel -->
-    <div class="video-carousel embla w-full overflow-hidden py-10" id="video-marquee-carousel">
+    <div class="video-carousel embla w-full overflow-hidden py-10 relative" id="video-marquee-carousel">
       <div class="embla__container flex">
         {% for item in config.videos.value %}
           {% assign video_src = item.video.value | default: item %}
@@ -66,6 +66,26 @@
           {% endif %}
         {% endfor %}
       </div>
+
+      <!-- Navigation Buttons -->
+      <button
+        id="MarqueePrevButton"
+        class="absolute top-1/2 left-4 -translate-y-1/2 z-10 w-[24px] h-[24px] rounded-full bg-[#E52888] border-[0.5px] border-[#D4E391] shadow-[0.5px_0.5px_0px_#D4E391] flex md:hidden items-center justify-center flex-shrink-0 transition-transform hover:scale-105"
+        aria-label="Previous Slide"
+      >
+        <svg class="w-[6px] h-[11px] rotate-180" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.06067 1.06067L5.06067 5.06067L1.06067 9.06067" stroke="#D4E391" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button
+        id="MarqueeNextButton"
+        class="absolute top-1/2 right-4 -translate-y-1/2 z-10 w-[24px] h-[24px] rounded-full bg-[#E52888] border-[0.5px] border-[#D4E391] shadow-[0.5px_0.5px_0px_#D4E391] flex md:hidden items-center justify-center flex-shrink-0 transition-transform hover:scale-105"
+        aria-label="Next Slide"
+      >
+        <svg class="w-[6px] h-[11px]" viewBox="0 0 6 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.06067 1.06067L5.06067 5.06067L1.06067 9.06067" stroke="#D4E391" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -81,6 +101,17 @@
         dragFree: true,
         containScroll: 'trimSnaps',
       });
+
+      // Navigation Buttons
+      const prevBtn = document.getElementById('MarqueePrevButton');
+      const nextBtn = document.getElementById('MarqueeNextButton');
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => emblaApi.scrollPrev());
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => emblaApi.scrollNext());
+      }
 
       // Add click listeners to slides
       const slides = emblaNode.querySelectorAll('.embla__slide');
@@ -150,12 +181,7 @@
       "label": "Animation Speed",
       "default": 40
     },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background Color",
-      "default": "#FFFFFF"
-    },
+
     {
       "type": "range",
       "id": "padding_top",

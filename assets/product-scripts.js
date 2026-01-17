@@ -178,4 +178,17 @@ document.addEventListener('DOMContentLoaded', function () {
             mainEmbla.scrollTo(index);
         };
     }
+
+    // Coupon Carousel Integration (Mobile Only)
+    const couponNode = document.getElementById('CouponCarousel');
+    if (couponNode && window.EmblaCarousel) {
+        EmblaCarousel(couponNode, {
+            dragFree: true,
+            containScroll: 'trimSnaps',
+            align: 'start',
+            breakpoints: {
+                '(min-width: 768px)': { active: false }
+            }
+        });
+    }
 });
