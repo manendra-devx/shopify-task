@@ -295,7 +295,7 @@
           <button
             type="button"
             onclick="buyNow(this)"
-            class="w-full h-[48px] btn-primary rounded-[8px] flex items-center justify-center gap-[8px] px-[10px] py-[12px] font-body font-medium text-[16px] text-[#F9F3F1] leading-[100%] uppercase transition-all"
+            class="hidden md:flex w-full h-[48px] btn-primary rounded-[8px] items-center justify-center gap-[8px] px-[10px] py-[12px] font-body font-medium text-[16px] text-[#F9F3F1] leading-[100%] uppercase transition-all"
           >
             Buy It Now
           </button>
@@ -304,7 +304,7 @@
 
       <!-- Dynamic Coupons Section -->
       {% if product.metafields.custom.coupons.value != blank %}
-        <div class="embla-coupons w-full overflow-hidden mt-4" id="CouponCarousel">
+        <div class="embla-coupons w-full overflow-hidden mt-[16px]" id="CouponCarousel">
           <div class="flex flex-nowrap md:flex-wrap md:gap-3" id="CouponContainer">
             {% for coupon in product.metafields.custom.coupons.value %}
               <div class="embla__slide flex-[0_0_auto] mr-3 md:mr-0 last:mr-0">
